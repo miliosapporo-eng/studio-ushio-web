@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, X, Quote } from 'lucide-react';
+import { ChevronDown, X, Quote, ChevronLeft } from 'lucide-react';
 
 // --- Components ---
 
 // Services Accordion Component
-const ServicesAccordion = () => {
+const ServicesAccordion = ({ onNavigate }) => {
   const [activeId, setActiveId] = useState('shooting');
 
   const services = [
@@ -15,7 +15,8 @@ const ServicesAccordion = () => {
       title: '各種撮影',
       desc: 'ポートレート、宣材、アーティスティックな作品撮りまで。\nあなたの魅力を最大限に引き出す、プロフェッショナルな撮影体験を提供します。\nその他なんでも撮ります。動画もご相談ください。',
       imgSrc: 'images/serabi.jpg',
-      href: 'shooting.html',
+      href: '#',
+      onClick: (e) => { e.preventDefault(); onNavigate('shooting'); },
       activeScale: 'scale-105',
       inactiveScale: 'scale-110'
     },
@@ -27,6 +28,7 @@ const ServicesAccordion = () => {
       desc: '日本海の恵みを遊び尽くす大人のプレミアムな撮影会。\n北海道でしか味わえない極上の体験を今すぐブッキングしてください。',
       imgSrc: 'images/powertide.png',
       href: 'https://powertide.design4qol.com',
+      onClick: undefined,
       // 表示枠は100%を維持し、写真自体を90%に設定
       activeScale: 'scale-90', 
       inactiveScale: 'scale-100'
@@ -40,6 +42,7 @@ const ServicesAccordion = () => {
       desc: '「写真」の最終目的は、飾られること。考えさせること。拠り所になること。ではないだろうかという仮説を元に鑑賞することから始めてみようというコミュニティサイト。',
       imgSrc: 'images/lensandlogos.png',
       href: 'https://ppsg.design4qol.com',
+      onClick: undefined,
       activeScale: 'scale-105',
       inactiveScale: 'scale-110'
     }
@@ -103,6 +106,7 @@ const ServicesAccordion = () => {
                   <div>
                     <a 
                       href={item.href} 
+                      onClick={item.onClick}
                       className="inline-block text-xs tracking-widest border-b border-white/30 hover:border-gold hover:text-gold pb-1 transition-all text-white"
                     >
                       VIEW MORE
@@ -115,6 +119,90 @@ const ServicesAccordion = () => {
         })}
       </div>
     </section>
+  );
+};
+
+// Shooting Page Component
+const ShootingPage = ({ onNavigate, onOpenContact }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const shootingCategories = [
+    {
+      title: 'ポートレート',
+      desc: 'あなたの持つ本来の魅力、隠された一面を光と影で引き出します。\n\nオーディション用、プロフィール用、あるいは自分自身を見つめ直すための特別な一枚。外の世界の喧騒から離れた静かなスタジオで、対話を重ねながら最も美しい瞬間を切り取ります。',
+      imgSrc: 'images/spp.jpg',
+    },
+    {
+      title: 'イベント記録',
+      desc: 'ライブ、カンファレンス、パーティーなど、その場に流れる空気感や熱気をそのままに。\n\n二度と訪れない大切な瞬間の連続を、一つの美しいストーリーとして記録します。',
+      imgSrc: 'images/event.png',
+    },
+    {
+      title: 'スポーツ',
+      desc: 'アスリートの躍動感、限界に挑む表情、一瞬のドラマを捉えます。\n\n屋内・屋外を問わず、スピード感あふれる決定的なシーンを、プロの技術で鮮明に撮影します。',
+      imgSrc: 'images/sports.jpg',
+    },
+    {
+      title: 'ペット',
+      desc: '家族の一員である愛犬や愛猫の、愛くるしい表情や無邪気な仕草を。\n\n動物たちがリラックスできる環境を作り、彼ららしい自然な姿と、飼い主様との絆を写真に残します。',
+      imgSrc: 'images/pet.jpg',
+    },
+    {
+      title: '料理',
+      desc: '湯気、照り、シズル感。料理人の想いが込められた一皿を、最も美味しく見える光とアングルで。\n\nレストランのメニュー用からSNSのプロモーション用まで、食欲をそそる一枚を撮影します。',
+      imgSrc: 'images/food.jpg',
+    },
+    {
+      title: 'その他リクエスト',
+      desc: 'アーティスティックな作品撮り、商品撮影（物撮り）、建築・インテリア写真など。\n\n型にとらわれない柔軟な対応で、あなたのビジョンやアイディアを具体的な形にします。動画撮影についてもお気軽にご相談ください。',
+      imgSrc: 'images/request.jpg',
+    }
+  ];
+
+  return (
+    <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
+      {/* 戻るボタン */}
+      <button 
+        onClick={() => onNavigate('home')} 
+        className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
+      >
+        <ChevronLeft className="mr-2" size={20} /> HOME
+      </button>
+
+      <h1 className="text-4xl md:text-5xl font-light tracking-[0.2em] mb-20 text-center uppercase">Shooting</h1>
+
+      <div className="space-y-32">
+        {shootingCategories.map((item, index) => (
+          <section key={index} className={`flex flex-col gap-10 items-center ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+            <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden border border-white/10 glass-panel group">
+              <img 
+                src={item.imgSrc} 
+                className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                alt={item.title} 
+              />
+            </div>
+            <div className="w-full md:w-1/2 space-y-6">
+              <h2 className="text-2xl tracking-widest text-gold font-light">{item.title}</h2>
+              <p className="text-gray-300 leading-relaxed text-sm font-sans whitespace-pre-line">
+                {item.desc}
+              </p>
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <div className="mt-32 text-center border-t border-white/10 pt-16">
+        <p className="text-gray-400 text-sm mb-8 tracking-widest">撮影のご依頼・ご相談はお気軽にご連絡ください。</p>
+        <button 
+          onClick={onOpenContact} 
+          className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
+        >
+          CONTACT US
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -212,6 +300,7 @@ export default function App() {
   const canvasRef = useRef(null);
   const logoRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home');
 
   // Canvas Animation Logic
   useEffect(() => {
@@ -603,68 +692,73 @@ export default function App() {
         className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"
       ></canvas>
 
-      {/* Header / Hero Section */}
-      <header className="relative w-full h-[80vh] flex flex-col justify-center items-center text-center px-4">
-        <div className="animate-fade-in z-10 mix-blend-screen flex flex-col items-center">
-          <p className="text-sm md:text-base tracking-[0.3em] text-blue-200/60 mb-8 uppercase">
-            Photography & Creative Space
-          </p>
-          
-          <div className="mb-6 relative">
-            <img 
-              ref={logoRef}
-              id="logo-img" 
-              src="images/studioushio.png" 
-              alt="Studio Ushio" 
-              className="max-w-[32vw] w-auto h-auto md:max-w-[230px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-              onError={handleLogoError}
-            />
-          </div>
+      {currentPage === 'home' ? (
+        <>
+          {/* Header / Hero Section */}
+          <header className="relative w-full h-[80vh] flex flex-col justify-center items-center text-center px-4">
+            <div className="animate-fade-in z-10 mix-blend-screen flex flex-col items-center">
+              <p className="text-sm md:text-base tracking-[0.3em] text-blue-200/60 mb-8 uppercase">
+                Photography & Creative Space
+              </p>
+              
+              <div className="mb-6 relative">
+                <img 
+                  ref={logoRef}
+                  id="logo-img" 
+                  src="images/studioushio.png" 
+                  alt="Studio Ushio" 
+                  className="max-w-[32vw] w-auto h-auto md:max-w-[230px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                  onError={handleLogoError}
+                />
+              </div>
 
-          <p className="text-lg md:text-xl font-light tracking-widest mt-8 text-blue-100/80">
-            深淵を照らす光。<br className="md:hidden" />静寂に響く鼓動。
-          </p>
-        </div>
-        
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce opacity-50 text-white">
-          <ChevronDown size={24} strokeWidth={1} />
-        </div>
-      </header>
+              <p className="text-lg md:text-xl font-light tracking-widest mt-8 text-blue-100/80">
+                深淵を照らす光。<br className="md:hidden" />静寂に響く鼓動。
+              </p>
+            </div>
+            
+            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce opacity-50 text-white">
+              <ChevronDown size={24} strokeWidth={1} />
+            </div>
+          </header>
 
-      {/* Main Content */}
-      <main className="flex-grow w-full max-w-6xl mx-auto py-20 z-10">
-        
-        {/* Services Accordion Section */}
-        <ServicesAccordion />
+          {/* Main Content */}
+          <main className="flex-grow w-full max-w-6xl mx-auto py-20 z-10">
+            
+            {/* Services Accordion Section */}
+            <ServicesAccordion onNavigate={setCurrentPage} />
 
-        {/* PR Comments */}
-        <section className="max-w-3xl mx-auto text-center px-4 mb-16">
-          <div className="mb-8 flex flex-col items-center">
-            <Quote size={48} className="mb-6 opacity-50 text-gray-400" />
-            <h4 className="text-xl md:text-2xl font-light mb-8 tracking-widest text-blue-50">「凪と荒波、その狭間で。」</h4>
-          </div>
-          
-          <p className="text-gray-300 leading-loose text-sm md:text-base font-sans text-justify md:text-center">
-            Studio Ushioは、真夜中の海のような静謐な空間です。<br />
-            そこは、あなたの中に眠る「まだ見ぬ自分」と出会うための場所。<br /><br />
-            その海原を照らすのは岬の灯りでしょうか、星の輝きでしょうか、やがてのぼる朝日でしょうか。<br />
-            外の世界の喧騒を遮断し、被写体とカメラマンが呼吸を合わせる濃密な時間。<br />
-            深い闇の中から、あなたの本質を鮮やかに浮かび上がらせます。<br /><br />
-            特別な日の記念にも、日常の記録にも、アート作品の創作にも。<br />
-            Studio Ushioで、深淵なる写真体験を。
-          </p>
+            {/* PR Comments */}
+            <section className="max-w-3xl mx-auto text-center px-4 mb-16">
+              <div className="mb-8 flex flex-col items-center">
+                <Quote size={48} className="mb-6 opacity-50 text-gray-400" />
+                <h4 className="text-xl md:text-2xl font-light mb-8 tracking-widest text-blue-50">「凪と荒波、その狭間で。」</h4>
+              </div>
+              
+              <p className="text-gray-300 leading-loose text-sm md:text-base font-sans text-justify md:text-center">
+                Studio Ushioは、真夜中の海のような静謐な空間です。<br />
+                そこは、あなたの中に眠る「まだ見ぬ自分」と出会うための場所。<br /><br />
+                その海原を照らすのは岬の灯りでしょうか、星の輝きでしょうか、やがてのぼる朝日でしょうか。<br />
+                外の世界の喧騒を遮断し、被写体とカメラマンが呼吸を合わせる濃密な時間。<br />
+                深い闇の中から、あなたの本質を鮮やかに浮かび上がらせます。<br /><br />
+                特別な日の記念にも、日常の記録にも、アート作品の創作にも。<br />
+                Studio Ushioで、深淵なる写真体験を。
+              </p>
 
-          <div className="mt-12">
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
-            >
-              CONTACT US
-            </button>
-          </div>
-        </section>
-
-      </main>
+              <div className="mt-12">
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
+                >
+                  CONTACT US
+                </button>
+              </div>
+            </section>
+          </main>
+        </>
+      ) : (
+        <ShootingPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
+      )}
 
       {/* Footer */}
       <footer className="w-full border-t border-white/10 py-12 px-6 flex flex-col md:flex-row items-center justify-between text-gray-500 text-xs tracking-widest mt-auto z-10 bg-black/80 backdrop-blur-md">
