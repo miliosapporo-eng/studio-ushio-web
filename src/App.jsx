@@ -206,6 +206,57 @@ const ShootingPage = ({ onNavigate, onOpenContact }) => {
   );
 };
 
+// SNS Plan Page Component
+const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
+      {/* 戻るボタン */}
+      <button 
+        onClick={() => onNavigate('home')} 
+        className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
+      >
+        <ChevronLeft className="mr-2" size={20} /> HOME
+      </button>
+
+      <h1 className="text-3xl md:text-5xl font-light tracking-[0.2em] mb-4 text-center uppercase">SNS Posting Stock Plan</h1>
+      <p className="text-center text-gold tracking-widest mb-20 text-sm md:text-base">SNS用ストック写真撮影プラン</p>
+
+      <div className="space-y-20">
+        <section className="flex flex-col gap-10 items-center">
+          <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden border border-white/10 glass-panel group">
+            <img 
+              src="images/sns.jpg" 
+              className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700" 
+              alt="SNS POSTING STOCK PLAN" 
+            />
+          </div>
+          <div className="w-full max-w-3xl space-y-6 mx-auto text-center md:text-left">
+            <p className="text-gray-300 leading-relaxed text-sm md:text-base font-sans whitespace-pre-line">
+              日々のSNS運用に必要な高品質な写真をまとめて撮影・納品する特別プランです。<br/><br/>
+              ブランドの統一感を持たせつつ、バリエーション豊かなカットをストックしておくことで、毎日の投稿のクオリティと効率を飛躍的に向上させます。<br/><br/>
+              企業アカウントから個人クリエイターまで、あなたの魅力を最大限に伝えるビジュアル戦略をサポートします。
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <div className="mt-32 text-center border-t border-white/10 pt-16">
+        <p className="text-gray-400 text-sm mb-8 tracking-widest">プランの詳細やご依頼はお気軽にご連絡ください。</p>
+        <button 
+          onClick={onOpenContact} 
+          className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
+        >
+          CONTACT US
+        </button>
+      </div>
+    </div>
+  );
+};
+
 // Contact Modal Component
 const ContactModal = ({ isOpen, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -725,6 +776,30 @@ export default function App() {
           {/* Main Content */}
           <main className="flex-grow w-full max-w-6xl mx-auto py-20 z-10">
             
+            {/* SNS Plan Banner */}
+            <section className="mb-24 px-4 md:px-0">
+              <div
+                onClick={() => setCurrentPage('sns')}
+                className="block relative w-full h-48 md:h-64 overflow-hidden group border border-white/20 bg-black cursor-pointer transition-transform duration-500 hover:scale-[1.01]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-950/80 to-black/80 z-0"></div>
+                <img 
+                  src="images/sns.jpg" 
+                  alt="SNS POSTING STOCK PLAN" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500 z-0 mix-blend-luminosity" 
+                />
+                <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+                  <h3 className="text-2xl md:text-4xl font-light tracking-[0.2em] mb-2 group-hover:text-white transition-colors uppercase text-gray-200">
+                    SNS POSTING STOCK PLAN
+                  </h3>
+                  <p className="text-sm md:text-base tracking-[0.5em] font-thin text-gold group-hover:text-yellow-400 transition-colors mt-2">
+                    受付中
+                  </p>
+                  <div className="mt-6 w-12 h-[1px] bg-white/50 group-hover:w-24 transition-all duration-500"></div>
+                </div>
+              </div>
+            </section>
+
             {/* Services Accordion Section */}
             <ServicesAccordion onNavigate={setCurrentPage} />
 
@@ -756,9 +831,11 @@ export default function App() {
             </section>
           </main>
         </>
-      ) : (
+      ) : currentPage === 'shooting' ? (
         <ShootingPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
-      )}
+      ) : currentPage === 'sns' ? (
+        <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
+      ) : null}
 
       {/* Footer */}
       <footer className="w-full border-t border-white/10 py-12 px-6 flex flex-col md:flex-row items-center justify-between text-gray-500 text-xs tracking-widest mt-auto z-10 bg-black/80 backdrop-blur-md">
