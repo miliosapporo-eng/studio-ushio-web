@@ -27,8 +27,9 @@ const ServicesAccordion = () => {
       desc: '日本海の恵みを遊び尽くす大人のプレミアムな撮影会。\n北海道でしか味わえない極上の体験を今すぐブッキングしてください。',
       imgSrc: 'images/powertide.png',
       href: 'https://powertide.design4qol.com',
-      activeScale: 'scale-90',
-      inactiveScale: 'scale-95'
+      // 表示枠は100%を維持し、写真自体を90%に設定
+      activeScale: 'scale-90', 
+      inactiveScale: 'scale-100'
     },
     {
       id: 'community',
@@ -57,9 +58,9 @@ const ServicesAccordion = () => {
               className="group relative overflow-hidden rounded-sm transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer flex flex-col justify-end border border-white/5 hover:border-white/20"
               style={{ flex: isActive ? '3 1 0%' : '1 1 0%' }}
             >
-              {/* 背景画像（透明度と拡大縮小の役割をdivとimgで分離） */}
+              {/* 背景画像 */}
               <div 
-                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                className="absolute inset-0 w-full h-full transition-opacity duration-1000 flex items-center justify-center"
                 style={{ opacity: isActive ? 0.4 : 0.05 }}
               >
                 <img 
@@ -206,7 +207,6 @@ const ContactModal = ({ isOpen, onClose }) => {
   );
 };
 
-
 // --- Main Application ---
 export default function App() {
   const canvasRef = useRef(null);
@@ -225,7 +225,6 @@ export default function App() {
     let lighthouse;
     let animationFrameId;
 
-    // --- 重力レンズ（特異点）のパラメータ ---
     let gravityParams = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 3,
