@@ -29,9 +29,8 @@ const ServicesAccordion = ({ onNavigate }) => {
       imgSrc: 'images/powertide.png',
       href: 'https://powertide.design4qol.com',
       onClick: undefined,
-      // 表示枠は100%を維持し、写真自体を90%に設定
-      activeScale: 'scale-90', 
-      inactiveScale: 'scale-100'
+      activeScale: 'scale-105', 
+      inactiveScale: 'scale-110'
     },
     {
       id: 'community',
