@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025.10.12 YURI AIKAWA | Power Tide</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Bodoni Moda -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+        
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: black;
+            color: #e2e8f0; /* slate-200 */
+        }
+        
+        .font-vogue {
+            font-family: 'Bodoni Moda', serif;
+            font-optical-sizing: auto;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b45309; /* amber-700 */
+        }
+
+        /* Selection Color */
+        ::selection {
+            background-color: #f59e0b; /* amber-500 */
+            color: black;
+        }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-500 selection:text-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Header Logo Link -->
+                <div class="flex-shrink-0 flex items-center group cursor-pointer" onclick="location.href='https://powertide.design4qol.com/'">
+                    <!-- Path updated to ../images/ -->
+                    <img src="../images/powertide.png" alt="power tide" class="h-10 w-auto object-contain hover:opacity-80 transition-opacity">
+                </div>
+                
+                <!-- Desktop Back Link -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="https://powertide.design4qol.com/" class="text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors uppercase tracking-[0.2em] font-vogue flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Top
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button (Simple Back link for mobile) -->
+                <div class="md:hidden flex items-center">
+                    <a href="https://powertide.design4qol.com/" class="text-slate-200 hover:text-amber-500 focus:outline-none">
+                        <i data-lucide="arrow-left" class="h-6 w-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20">
+        
+        <!-- Page Hero -->
+        <div class="relative h-[60vh] min-h-[500px] overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop" 
+                     alt="YURI AIKAWA" 
+                     class="w-full h-full object-cover object-top opacity-70">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            </div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 animate-fade-in-up">
+                <div class="max-w-7xl mx-auto">
+                    <span class="inline-block px-3 py-1 border border-amber-500 text-amber-500 text-xs font-bold tracking-widest uppercase mb-4 bg-black/50 backdrop-blur-md">
+                        Premium Session
+                    </span>
+                    <h1 class="text-5xl md:text-7xl font-vogue font-bold text-white mb-4 italic leading-tight">
+                        YURI AIKAWA
+                    </h1>
+                    <p class="text-xl md:text-2xl text-slate-300 font-light tracking-wide flex items-center gap-4">
+                        <span class="font-vogue">2025.10.12 (Sat)</span>
+                        <span class="h-px w-8 bg-amber-500"></span>
+                        <span class="text-sm uppercase tracking-widest">Otaru Canal & Night Cruise</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Container -->
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Left Column: Info -->
+                <div class="md:col-span-2 space-y-16">
+                    
+                    <!-- Introduction -->
+                    <section>
+                        <h2 class="text-2xl font-vogue text-amber-500 italic mb-6 border-b border-amber-500/30 pb-2 inline-block">Introduction</h2>
+                        <p class="text-slate-400 leading-relaxed text-sm mb-6">
+                            東京で活躍中のモデル「愛川ゆり」が北海道初上陸。<br>
+                            小樽の歴史的な街並みと、夜の運河クルーズを貸し切りで撮影できるプレミアムな一夜です。<br>
+                            秋の小樽の澄んだ空気感とともに、彼女のクールでアンニュイな表情を切り取ってください。
+                        </p>
+                        <div class="flex gap-4">
+                            <span class="text-xs text-slate-500 border border-zinc-700 px-3 py-1 rounded-full">#Portrait</span>
+                            <span class="text-xs text-slate-500 border border-zinc-700 px-3 py-1 rounded-full">#NightPhotography</span>
+                            <span class="text-xs text-slate-500 border border-zinc-700 px-3 py-1 rounded-full">#Otaru</span>
+                        </div>
+                    </section>
+
+                    <!-- Time Table -->
+                    <section>
+                        <h2 class="text-2xl font-vogue text-amber-500 italic mb-8 border-b border-amber-500/30 pb-2 inline-block">Time Table</h2>
+                        
+                        <div class="space-y-4">
+                            <!-- Slot 1 -->
+                            <div class="bg-zinc-900 border border-zinc-800 p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-amber-500/50 transition-colors">
+                                <div class="text-center md:text-left">
+                                    <span class="block text-amber-500 font-bold text-xs tracking-widest uppercase mb-1">1st Session</span>
+                                    <span class="text-2xl font-vogue text-white">13:00 - 14:20</span>
+                                    <span class="text-slate-500 text-xs ml-2">(80min)</span>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <p class="text-white font-bold mb-1">小樽運河周辺・ストリート</p>
+                                    <p class="text-slate-500 text-xs">私服Aパターン / 自然光 / 1対1個撮</p>
+                                </div>
+                                <div class="text-center md:text-right min-w-[120px]">
+                                    <p class="text-xl font-vogue text-white mb-2">¥18,000</p>
+                                    <span class="bg-zinc-800 text-zinc-500 text-xs font-bold px-4 py-2 rounded uppercase tracking-widest cursor-not-allowed">
+                                        SOLD OUT
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Slot 2 -->
+                            <div class="bg-zinc-900 border border-zinc-800 p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-amber-500/50 transition-colors">
+                                <div class="text-center md:text-left">
+                                    <span class="block text-amber-500 font-bold text-xs tracking-widest uppercase mb-1">2nd Session</span>
+                                    <span class="text-2xl font-vogue text-white">15:00 - 16:20</span>
+                                    <span class="text-slate-500 text-xs ml-2">(80min)</span>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <p class="text-white font-bold mb-1">北運河・旧倉庫群</p>
+                                    <p class="text-slate-500 text-xs">私服Bパターン / レトロな雰囲気 / 1対1個撮</p>
+                                </div>
+                                <div class="text-center md:text-right min-w-[120px]">
+                                    <p class="text-xl font-vogue text-white mb-2">¥18,000</p>
+                                    <a href="#" class="inline-block bg-white text-black hover:bg-amber-500 hover:text-white transition-colors text-xs font-bold px-6 py-2 rounded uppercase tracking-widest">
+                                        Reserve
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Special Slot -->
+                            <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 border border-amber-500/30 p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rotate-45 transform translate-x-8 -translate-y-8"></div>
+                                <div class="text-center md:text-left">
+                                    <span class="block text-amber-500 font-bold text-xs tracking-widest uppercase mb-1">Special Session</span>
+                                    <span class="text-2xl font-vogue text-white">18:00 - 19:30</span>
+                                    <span class="text-slate-500 text-xs ml-2">(90min)</span>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <p class="text-white font-bold mb-1">ナイトクルーズ＆ディナー</p>
+                                    <p class="text-slate-500 text-xs">ドレス衣装 / 貸切船上撮影 / 終了後お食事会</p>
+                                </div>
+                                <div class="text-center md:text-right min-w-[120px]">
+                                    <p class="text-xl font-vogue text-amber-500 mb-2">¥35,000</p>
+                                    <a href="#" class="inline-block bg-amber-600 text-white hover:bg-amber-500 transition-colors text-xs font-bold px-6 py-2 rounded uppercase tracking-widest shadow-lg shadow-amber-500/20">
+                                        Reserve
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Location Map/Info -->
+                    <section>
+                        <h2 class="text-2xl font-vogue text-amber-500 italic mb-6 border-b border-amber-500/30 pb-2 inline-block">Meeting Place</h2>
+                        <div class="bg-zinc-900 border border-zinc-800 p-6 flex flex-col gap-4">
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="map-pin" class="text-amber-500 shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-white font-bold text-lg">小樽駅前広場 集合</h3>
+                                    <p class="text-slate-400 text-sm mt-1">
+                                        JR小樽駅を出てすぐの広場にてスタッフがお待ちしております。<br>
+                                        「Power Tide」のプレートを持ったスタッフにお声がけください。
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Map Embed Placeholder -->
+                            <div class="w-full h-48 bg-zinc-800 flex items-center justify-center text-slate-600 text-xs tracking-widest border border-zinc-700">
+                                GOOGLE MAP EMBED HERE
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column: Sticky Reservation & Notes -->
+                <div class="md:col-span-1">
+                    <div class="sticky top-24 space-y-8">
+                        <!-- Notes -->
+                        <div class="bg-zinc-900 border border-zinc-800 p-6 text-xs text-slate-500 space-y-2">
+                            <p class="font-bold text-slate-400 text-sm mb-2 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4 text-amber-500"></i> 注意事項
+                            </p>
+                            <ul class="list-disc pl-4 space-y-2 leading-relaxed">
+                                <li>「Reserve」ボタンをクリックすると決済ページへ移動します。</li>
+                                <li>雨天決行。荒天時は中止のご連絡をいたします。</li>
+                                <li>動画撮影はNGとなります。</li>
+                                <li>モデルへの接触、極端なローアングルは禁止です。</li>
+                                <li>キャンセル料は7日前より発生いたします。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Common) -->
+    <footer class="bg-black text-slate-400 py-20 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                <div class="max-w-xs">
+                    <div class="flex items-center gap-2 mb-8">
+                        <span class="font-vogue font-bold text-2xl text-white italic">POWER TIDE</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-loose mb-8 tracking-widest uppercase">
+                        Hokkaido Portrait Photography<br/>
+                        & Premium Event Planning.<br/>
+                        Since 2025.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-slate-600 hover:text-white transition-colors" aria-label="Threads">
+                            <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor">
+                                <path d="M12.15 2a9.7 9.7 0 0 0-7.23 3 10.5 10.5 0 0 0-2.92 7.5c0 6.63 5.16 11.5 10 11.5a9.54 9.54 0 0 0 7.37-3.23.85.85 0 1 0-1.3-1.1 7.82 7.82 0 0 1-6.07 2.65c-3.88 0-8.23-3.66-8.23-9.82a8.88 8.88 0 0 1 2.53-6.42 8.08 8.08 0 0 1 5.85-2.4c4.6 0 7.74 3.2 7.74 7.6 0 3.1-1.9 5.25-4.63 5.25A2.34 2.34 0 0 1 12.87 14v-2a3.84 3.84 0 0 0 3-1.35 4.15 4.15 0 0 0 .86-2.58c0-2.92-2.1-5-5-5-2.9 0-5.22 2.32-5.22 5.57 0 3.03 2.13 5.6 5.12 5.6a3.9 3.9 0 0 0 3.13-1.32.84.84 0 1 0-1.27-1.1 2.36 2.36 0 0 1-1.86.74c-1.93 0-3.32-1.7-3.32-3.92a3.84 3.84 0 0 1 3.53-4c1.86 0 3.32 1.33 3.32 3.33 0 .4-.07.78-.17 1.14a2 2 0 0 1-1.33 1.48c-.5.15-1.15.06-1.57-.37a1 1 0 0 1-.26-.7V14h0v1.2a1.1 1.1 0 0 0 1 .53c1.5 0 3.07-1.3 3.07-3.55 0-5.26-3.8-9.18-9.35-9.18Z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner Links with Path updated to ../images/ -->
+                <div class="flex-1 w-full">
+                    <div class="flex flex-wrap justify-center md:justify-end gap-8 items-center opacity-60 hover:opacity-100 transition-opacity duration-500">
+                        <a href="https://design4qol.com" target="_blank" rel="noopener noreferrer" class="group">
+                            <img src="../images/logo2.png" alt="design4qol" class="h-6 md:h-8 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
+                        </a>
+                        <a href="https://ephi.design4qol.com" target="_blank" rel="noopener noreferrer" class="group">
+                            <img src="../images/ephi.png" alt="ephi" class="h-6 md:h-8 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
+                        </a>
+                        <a href="https://savepoint.design4qol.com" target="_blank" rel="noopener noreferrer" class="group">
+                            <img src="../images/savepoint_sq.png" alt="savepoint" class="h-6 md:h-8 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
+                        </a>
+                        <a href="https://studioushio.design4qol.com" target="_blank" rel="noopener noreferrer" class="group">
+                            <img src="../images/studioushio.png" alt="studio ushio" class="h-6 md:h-8 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-center items-center text-[10px] text-zinc-700 uppercase tracking-widest">
+                <span class="font-vogue">&copy; 2026 MiLIo, LLC. ALL RIGHTS RESERVED.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

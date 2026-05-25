@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Application | Power Tide</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Bodoni Moda -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+        
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: black;
+            color: #e2e8f0;
+        }
+        
+        .font-vogue {
+            font-family: 'Bodoni Moda', serif;
+        }
+
+        /* Custom UI Elements */
+        .form-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            border-radius: 4px;
+        }
+
+        input, textarea, select {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #f59e0b !important;
+            outline: none;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Spinner for Loading */
+        .spinner {
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            border-top: 2px solid #f59e0b;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="selection:bg-amber-500 selection:text-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+            <div class="flex-shrink-0 cursor-pointer" onclick="location.href='index.html'">
+                <img src="images/powertide.png" alt="power tide" class="h-10 w-auto object-contain">
+            </div>
+            <div class="hidden md:flex space-x-8 font-vogue text-[10px] tracking-widest uppercase">
+                <a href="index.html#concept" class="text-slate-400 hover:text-amber-400 transition-colors">Concept</a>
+                <a href="index.html#cast" class="text-slate-400 hover:text-amber-400 transition-colors">Cast</a>
+                <a href="index.html#system" class="text-slate-400 hover:text-amber-400 transition-colors">System</a>
+            </div>
+            <button class="bg-white text-black px-6 py-2 text-[10px] font-bold hover:bg-amber-500 transition-all font-vogue tracking-widest">
+                RESERVATION
+            </button>
+        </div>
+    </nav>
+
+    <main class="pt-40 pb-32 max-w-4xl mx-auto px-4">
+        
+        <!-- Header -->
+        <div class="text-center mb-20 fade-in">
+            <span class="text-amber-600 font-vogue tracking-[0.4em] text-xs uppercase mb-4 block">Be a Muse</span>
+            <h1 class="text-5xl md:text-7xl font-vogue font-bold text-white italic mb-6">Recruitment</h1>
+            <div class="w-20 h-px bg-amber-500 mx-auto"></div>
+        </div>
+
+        <!-- Form Area -->
+        <form id="model-form" class="form-card p-8 md:p-12 space-y-12 fade-in shadow-2xl">
+            
+            <!-- Section 1: Basic Info -->
+            <section class="space-y-8">
+                <div class="flex items-center gap-4">
+                    <span class="w-1 h-6 bg-amber-500"></span>
+                    <h2 class="text-xl font-vogue text-white italic tracking-widest">Profile</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">氏名 (Full Name)</label>
+                        <input type="text" name="name" required placeholder="例：山田 花子" class="w-full p-4 rounded-sm">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">メールアドレス (Email)</label>
+                        <input type="email" name="email" required placeholder="example@mail.com" class="w-full p-4 rounded-sm">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">身長 (Height)</label>
+                        <input type="number" name="height" placeholder="165" class="w-full p-4 rounded-sm">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">活動拠点 (Base)</label>
+                        <select name="base" class="w-full p-4 rounded-sm appearance-none">
+                            <option value="sapporo">札幌 (Sapporo)</option>
+                            <option value="otaru">小樽 (Otaru)</option>
+                            <option value="tokyo">東京 (Tokyo)</option>
+                            <option value="other">その他 (Other)</option>
+                        </select>
+                    </div>
+                    <!-- 所属先記入欄 -->
+                    <div class="space-y-2 md:col-span-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">所属先 (Affiliation)</label>
+                        <input type="text" name="affiliation" placeholder="所属事務所・団体名（フリーランスの場合は「なし」と記入）" class="w-full p-4 rounded-sm">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: SNS -->
+            <section class="space-y-8">
+                <div class="flex items-center gap-4">
+                    <span class="w-1 h-6 bg-amber-500"></span>
+                    <h2 class="text-xl font-vogue text-white italic tracking-widest">Social Accounts</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Instagram ID</label>
+                        <input type="text" name="instagram" placeholder="@username" class="w-full p-4 rounded-sm">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Threads ID</label>
+                        <input type="text" name="threads" placeholder="@username" class="w-full p-4 rounded-sm">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Visuals -->
+            <section class="space-y-8">
+                <div class="flex items-center gap-4">
+                    <span class="w-1 h-6 bg-amber-500"></span>
+                    <h2 class="text-xl font-vogue text-white italic tracking-widest">Visuals</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Photo 1 -->
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">バストアップ / 顔写真 (Face Shot)</label>
+                        <div id="drop-zone-1" class="relative group border-2 border-dashed border-white/10 rounded-sm p-8 bg-white/5 hover:bg-white/10 transition-all cursor-pointer text-center h-64 flex flex-col items-center justify-center">
+                            <input type="file" id="imageInput1" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                            <div id="upload-placeholder-1">
+                                <i data-lucide="user" class="w-8 h-8 text-slate-500 mx-auto mb-4"></i>
+                                <p class="text-xs text-slate-400 tracking-widest">UPLOAD FACE SHOT</p>
+                            </div>
+                            <div id="image-preview-1" class="hidden absolute inset-0 w-full h-full p-2">
+                                <img src="" id="preview-img-1" class="w-full h-full object-cover rounded-sm shadow-2xl">
+                                <button type="button" onclick="resetImage(event, 1)" class="absolute top-4 right-4 bg-black/80 text-white rounded-full p-1 hover:bg-amber-500 transition-colors">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo 2 -->
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">全身写真 (Full Body Shot)</label>
+                        <div id="drop-zone-2" class="relative group border-2 border-dashed border-white/10 rounded-sm p-8 bg-white/5 hover:bg-white/10 transition-all cursor-pointer text-center h-64 flex flex-col items-center justify-center">
+                            <input type="file" id="imageInput2" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                            <div id="upload-placeholder-2">
+                                <i data-lucide="scan-line" class="w-8 h-8 text-slate-500 mx-auto mb-4"></i>
+                                <p class="text-xs text-slate-400 tracking-widest">UPLOAD FULL BODY</p>
+                            </div>
+                            <div id="image-preview-2" class="hidden absolute inset-0 w-full h-full p-2">
+                                <img src="" id="preview-img-2" class="w-full h-full object-cover rounded-sm shadow-2xl">
+                                <button type="button" onclick="resetImage(event, 2)" class="absolute top-4 right-4 bg-black/80 text-white rounded-full p-1 hover:bg-amber-500 transition-colors">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">自己PR / 想い (Message)</label>
+                    <textarea name="message" rows="5" placeholder="あなたの想いを聞かせてください..." class="w-full p-4 rounded-sm"></textarea>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="pt-8 text-center">
+                <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center px-16 py-4 bg-amber-500 text-black font-bold tracking-[0.3em] uppercase transition-all hover:bg-white overflow-hidden">
+                    <span id="btn-text" class="relative z-10 flex items-center">Apply Now</span>
+                </button>
+                <div class="mt-6 text-[10px] text-slate-500 tracking-widest uppercase leading-loose">
+                    <p>応募後、担当者より1週間以内にご連絡いたします。</p>
+                    <p class="text-amber-600/80">初回のWEB面談はGoogle Meetを利用予定です。</p>
+                </div>
+            </div>
+        </form>
+
+        <!-- Success View -->
+        <div id="success-view" class="hidden text-center py-24 fade-in">
+            <div class="form-card p-12 max-w-md mx-auto">
+                <div class="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <i data-lucide="check" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-3xl font-vogue text-white italic mb-4">Thank you.</h2>
+                <p class="text-slate-400 text-sm mb-10 leading-relaxed">ご応募ありがとうございました。あなたの個性が輝くステージで、お会いできることを楽しみにしています。</p>
+                <button onclick="location.href='index.html'" class="w-full py-4 border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all">Back to Home</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-slate-400 py-20 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <img src="images/powertide.png" alt="power tide" class="h-8 w-auto mx-auto mb-8 opacity-40">
+            <p class="text-[10px] tracking-[0.4em] text-zinc-700 uppercase font-vogue">© 2026 MiLIo, LLC. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <script>
+        // === Lucide Icons ===
+        lucide.createIcons();
+
+        // === GAS Config ===
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyrOAu6nZpHy1UZPe_Eda-E03LamAORMBEdffasK_4m9RINQG9dNeupWSzwKClUBsuSVQ/exec';
+
+        const form = document.getElementById('model-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        
+        // Image State
+        let images = {
+            1: "", // Face Shot
+            2: ""  // Full Body
+        };
+
+        // Setup Image Uploader Logic for multiple inputs
+        function setupImageUploader(id) {
+            const input = document.getElementById(`imageInput${id}`);
+            const preview = document.getElementById(`image-preview-${id}`);
+            const placeholder = document.getElementById(`upload-placeholder-${id}`);
+            const img = document.getElementById(`preview-img-${id}`);
+
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    images[id] = event.target.result;
+                    img.src = images[id];
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        setupImageUploader(1);
+        setupImageUploader(2);
+
+        window.resetImage = (e, id) => {
+            e.preventDefault();
+            images[id] = "";
+            document.getElementById(`imageInput${id}`).value = "";
+            document.getElementById(`image-preview-${id}`).classList.add('hidden');
+            document.getElementById(`upload-placeholder-${id}`).classList.remove('hidden');
+        };
+
+        // Form Submit Logic
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            btnText.innerHTML = `<div class="spinner mr-3"></div> Sending...`;
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+            
+            // Add images to data
+            data.imageFace = images[1];
+            data.imageBody = images[2];
+
+            try {
+                // ウェブアプリ側がCORS対応している前提
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // サーバー側の設定に合わせて変更してください
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                // no-cors の場合レスポンスの詳細は取得できませんが、送信は成功します
+                form.classList.add('hidden');
+                document.getElementById('success-view').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error(error);
+                alert('送信中にエラーが発生しました。時間を置いて再度お試しください。');
+                submitBtn.disabled = false;
+                btnText.innerHTML = `Apply Now`;
+            }
+        });
+    </script>
+</body>
+</html>
