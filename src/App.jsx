@@ -68,7 +68,7 @@ const ServicesAccordion = ({ onNavigate }) => {
                 <img 
                   src={item.imgSrc} 
                   alt={item.title}
-                  className={`w-full h-full object-cover transition-transform duration-1000 ${isActive ? item.activeScale : item.inactiveScale}`} 
+                  className={`w-full h-full object-cover illuminated-target ${isActive ? item.activeScale : item.inactiveScale}`} 
                 />
               </div>
               
@@ -469,31 +469,36 @@ export default function App() {
       updateAndDraw(gx, gy, mass, horizon) {
         const cx = width * 0.8;
         const cy = height * 0.4;
-        const logoImg = logoRef.current;
         
-        if (logoImg) {
-          const rect = logoImg.getBoundingClientRect();
+        // --- 画面内の指定されたすべての画像に光の計算を適用 ---
+        const targets = document.querySelectorAll('.illuminated-target');
+        
+        targets.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          // 要素が画面内に存在する場合のみ計算
           if (rect.top < height && rect.bottom > 0) {
-            const logoX = rect.left + rect.width / 2;
-            const logoY = rect.top + rect.height / 2;
-            const angleToLogo = Math.atan2(logoY - cy, logoX - cx);
+            const elX = rect.left + rect.width / 2;
+            const elY = rect.top + rect.height / 2;
+            const angleToEl = Math.atan2(elY - cy, elX - cx);
             
             let currentAngle = this.angle % (Math.PI * 2);
             if (currentAngle > Math.PI) currentAngle -= Math.PI * 2;
             if (currentAngle < -Math.PI) currentAngle += Math.PI * 2;
 
-            let diff = Math.abs(currentAngle - angleToLogo);
+            let diff = Math.abs(currentAngle - angleToEl);
             if (diff > Math.PI) diff = Math.PI * 2 - diff;
 
             const hitThreshold = 0.4; 
             if (diff < hitThreshold) {
               const intensity = 1 - (diff / hitThreshold);
-              logoImg.style.filter = `drop-shadow(0 0 ${20 + intensity * 60}px rgba(255, 255, 255, ${0.5 + intensity * 0.5})) brightness(${1 + intensity * 0.5})`;
+              // 光が直撃している時の輝度と影
+              el.style.filter = `drop-shadow(0 0 ${20 + intensity * 60}px rgba(255, 255, 255, ${0.5 + intensity * 0.5})) brightness(${1 + intensity * 0.5})`;
             } else {
-              logoImg.style.filter = 'drop-shadow(0 0 15px rgba(255,255,255,0.3)) brightness(1)';
+              // デフォルト状態
+              el.style.filter = 'drop-shadow(0 0 15px rgba(255,255,255,0.3)) brightness(1)';
             }
           }
-        }
+        });
 
         const beamLength = Math.max(width, height) * 2;
         const beamWidth = 0.4;
@@ -721,9 +726,12 @@ export default function App() {
         .text-gold { color: #d4af37; }
         .border-gold { border-color: #d4af37; }
         
-        #logo-img {
-          transition: filter 0.1s linear;
-          will-change: filter;
+        /* 光の瞬き(filter)と拡大縮小(transform)のアニメーションを共存させる設定 */
+        .illuminated-target {
+          transition-property: filter, transform;
+          transition-duration: 0.1s, 1s;
+          transition-timing-function: linear, cubic-bezier(0.4, 0, 0.2, 1);
+          will-change: filter, transform;
         }
 
         @keyframes fadeIn {
@@ -757,7 +765,7 @@ export default function App() {
                   id="logo-img" 
                   src="images/studioushio.png" 
                   alt="Studio Ushio" 
-                  className="max-w-[32vw] w-auto h-auto md:max-w-[230px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                  className="illuminated-target max-w-[32vw] w-auto h-auto md:max-w-[230px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                   onError={handleLogoError}
                 />
               </div>
@@ -785,7 +793,7 @@ export default function App() {
                 <img 
                   src="images/sns.jpg" 
                   alt="SNS POSTING STOCK PLAN" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500 z-0 mix-blend-luminosity" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500 z-0 mix-blend-luminosity illuminated-target" 
                 />
                 <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
                   <h3 className="text-2xl md:text-4xl font-light tracking-[0.2em] mb-2 group-hover:text-white transition-colors uppercase text-gray-200">
