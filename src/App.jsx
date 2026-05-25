@@ -14,7 +14,7 @@ const ServicesAccordion = ({ onNavigate }) => {
       categoryJa: '撮影',
       title: '各種撮影',
       desc: 'ポートレート、宣材、アーティスティックな作品撮りまで。\nあなたの魅力を最大限に引き出す、プロフェッショナルな撮影体験を提供します。\nその他なんでも撮ります。動画もご相談ください。',
-      imgSrc: 'images/serabi.jpg',
+      imgSrc: 'images/spp.jpg',
       href: '#',
       onClick: (e) => { e.preventDefault(); onNavigate('shooting'); },
       activeScale: 'scale-105',
@@ -27,7 +27,7 @@ const ServicesAccordion = ({ onNavigate }) => {
       title: 'POWER TIDE',
       desc: '日本海の恵みを遊び尽くす大人のプレミアムな撮影会。\n北海道でしか味わえない極上の体験を今すぐブッキングしてください。',
       imgSrc: 'images/powertide.png',
-      href: 'https://powertide.design4qol.com',
+      href: 'powertide.html',
       onClick: undefined,
       activeScale: 'scale-105', 
       inactiveScale: 'scale-110'
@@ -68,7 +68,7 @@ const ServicesAccordion = ({ onNavigate }) => {
                 <img 
                   src={item.imgSrc} 
                   alt={item.title}
-                  className={`w-full h-full object-cover illuminated-target ${isActive ? item.activeScale : item.inactiveScale}`} 
+                  className={`w-full h-full object-cover illuminated-target transition-transform duration-1000 ${isActive ? item.activeScale : item.inactiveScale}`} 
                 />
               </div>
               
@@ -178,7 +178,7 @@ const ShootingPage = ({ onNavigate, onOpenContact }) => {
             <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden border border-white/10 glass-panel group">
               <img 
                 src={item.imgSrc} 
-                className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target" 
                 alt={item.title} 
               />
             </div>
@@ -229,7 +229,7 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
           <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden border border-white/10 glass-panel group">
             <img 
               src="images/sns.jpg" 
-              className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700" 
+              className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 illuminated-target" 
               alt="SNS POSTING STOCK PLAN" 
             />
           </div>
@@ -836,6 +836,7 @@ export default function App() {
                 </button>
               </div>
             </section>
+
           </main>
         </>
       ) : currentPage === 'shooting' ? (
