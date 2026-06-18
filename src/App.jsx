@@ -14,7 +14,7 @@ const ServicesAccordion = ({ onNavigate }) => {
       categoryJa: '撮影',
       title: '各種撮影',
       desc: 'ポートレート、宣材、アーティスティックな作品撮りまで。\nあなたの魅力を最大限に引き出す、プロフェッショナルな撮影体験を提供します。\nその他なんでも撮ります。動画もご相談ください。',
-      imgSrc: 'images/spp.jpg',
+      imgSrc: 'images/spp.webp',
       href: '#',
       onClick: (e) => { e.preventDefault(); onNavigate('shooting'); },
       activeScale: 'scale-105',
@@ -26,10 +26,24 @@ const ServicesAccordion = ({ onNavigate }) => {
       categoryJa: '企画',
       title: 'POWER TIDE',
       desc: '日本海の恵みを遊び尽くす大人のプレミアムな撮影会。\n北海道でしか味わえない極上の体験を今すぐブッキングしてください。',
-      imgSrc: 'images/powertide.png',
-      href: 'powertide.html',
-      onClick: undefined,
+      imgSrc: 'images/powertide.webp',
+      href: '#',
+      onClick: (e) => { e.preventDefault(); },
+      linkText: 'COMING SOON',
+      disabled: true,
       activeScale: 'scale-105', 
+      inactiveScale: 'scale-110'
+    },
+    {
+      id: 'oneday',
+      category: 'PROJECT',
+      categoryJa: '企画',
+      title: 'ONEDAY',
+      desc: '1日だけのイベント型撮影スタジオ。出張型のスペースを間借りしたスタジオをパーティイベントのように各所で開催していきます。',
+      imgSrc: 'images/oneday.webp',
+      href: '#',
+      onClick: (e) => { e.preventDefault(); },
+      activeScale: 'scale-105',
       inactiveScale: 'scale-110'
     },
     {
@@ -39,7 +53,7 @@ const ServicesAccordion = ({ onNavigate }) => {
       title: 'Lens & Logos',
       subtitle: '~見つめる写真のはじめ型~',
       desc: '「写真」の最終目的は、飾られること。考えさせること。拠り所になること。ではないだろうかという仮説を元に鑑賞することから始めてみようというコミュニティサイト。',
-      imgSrc: 'images/lensandlogos.png',
+      imgSrc: 'images/lensandlogos.webp',
       href: 'https://ppsg.design4qol.com',
       onClick: undefined,
       activeScale: 'scale-105',
@@ -106,9 +120,9 @@ const ServicesAccordion = ({ onNavigate }) => {
                     <a 
                       href={item.href} 
                       onClick={item.onClick}
-                      className="inline-block text-xs tracking-widest border-b border-white/30 hover:border-gold hover:text-gold pb-1 transition-all text-white"
+                      className={`inline-block text-xs tracking-widest border-b pb-1 transition-all ${item.disabled ? 'border-gray-500 text-gray-500 cursor-default' : 'border-white/30 hover:border-gold hover:text-gold text-white'}`}
                     >
-                      VIEW MORE
+                      {item.linkText || 'VIEW MORE'}
                     </a>
                   </div>
                 </div>
@@ -131,32 +145,32 @@ const ShootingPage = ({ onNavigate, onOpenContact }) => {
     {
       title: 'ポートレート',
       desc: 'あなたの持つ本来の魅力、隠された一面を光と影で引き出します。\n\nオーディション用、プロフィール用、あるいは自分自身を見つめ直すための特別な一枚。外の世界の喧騒から離れた静かなスタジオで、対話を重ねながら最も美しい瞬間を切り取ります。',
-      imgSrc: 'images/spp.jpg',
+      imgSrc: 'images/spp.webp',
     },
     {
       title: 'イベント記録',
       desc: 'ライブ、カンファレンス、パーティーなど、その場に流れる空気感や熱気をそのままに。\n\n二度と訪れない大切な瞬間の連続を、一つの美しいストーリーとして記録します。',
-      imgSrc: 'images/event.png',
+      imgSrc: 'images/event.webp',
     },
     {
       title: 'スポーツ',
       desc: 'アスリートの躍動感、限界に挑む表情、一瞬のドラマを捉えます。\n\n屋内・屋外を問わず、スピード感あふれる決定的なシーンを、プロの技術で鮮明に撮影します。',
-      imgSrc: 'images/sports.jpg',
+      imgSrc: 'images/sports.webp',
     },
     {
       title: 'ペット',
       desc: '家族の一員である愛犬や愛猫の、愛くるしい表情や無邪気な仕草を。\n\n動物たちがリラックスできる環境を作り、彼ららしい自然な姿と、飼い主様との絆を写真に残します。',
-      imgSrc: 'images/pet.jpg',
+      imgSrc: 'images/pet.webp',
     },
     {
       title: '料理',
       desc: '湯気、照り、シズル感。料理人の想いが込められた一皿を、最も美味しく見える光とアングルで。\n\nレストランのメニュー用からSNSのプロモーション用まで、食欲をそそる一枚を撮影します。',
-      imgSrc: 'images/food.jpg',
+      imgSrc: 'images/food.webp',
     },
     {
       title: 'その他リクエスト',
       desc: 'アーティスティックな作品撮り、商品撮影（物撮り）、建築・インテリア写真など。\n\n型にとらわれない柔軟な対応で、あなたのビジョンやアイディアを具体的な形にします。動画撮影についてもお気軽にご相談ください。',
-      imgSrc: 'images/request.jpg',
+      imgSrc: 'images/request.webp',
     }
   ];
 
@@ -228,7 +242,7 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
         <section className="flex flex-col gap-10 items-center">
           <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden border border-white/10 glass-panel group">
             <img 
-              src="images/sns.jpg" 
+              src="images/sns.webp" 
               className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 illuminated-target" 
               alt="SNS POSTING STOCK PLAN" 
             />
@@ -763,7 +777,7 @@ export default function App() {
                 <img 
                   ref={logoRef}
                   id="logo-img" 
-                  src="images/studioushio.png" 
+                  src="images/studioushio.webp" 
                   alt="Studio Ushio" 
                   className="illuminated-target max-w-[32vw] w-auto h-auto md:max-w-[230px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                   onError={handleLogoError}
@@ -791,7 +805,7 @@ export default function App() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-950/80 to-black/80 z-0"></div>
                 <img 
-                  src="images/sns.jpg" 
+                  src="images/sns.webp" 
                   alt="SNS POSTING STOCK PLAN" 
                   className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500 z-0 mix-blend-luminosity illuminated-target" 
                 />
@@ -849,7 +863,7 @@ export default function App() {
       <footer className="w-full border-t border-white/10 py-12 px-6 flex flex-col md:flex-row items-center justify-between text-gray-500 text-xs tracking-widest mt-auto z-10 bg-black/80 backdrop-blur-md">
         <div className="mb-6 md:mb-0">
           <a href="https://design4qol.com" target="_blank" rel="noopener noreferrer" className="block hover:opacity-80 transition-opacity">
-            <img src="images/logo2.png" alt="Design4QoL" className="h-8 w-auto" />
+            <img src="images/logo2.webp" alt="Design4QoL" className="h-8 w-auto" />
           </a>
         </div>
         <div className="text-center md:text-right">
