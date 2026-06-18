@@ -31,7 +31,7 @@ try {
   console.error("Firebase initialization error", e);
 }
 
-// --- Default Data (For Seeding Firestore) ---
+// --- Default Data (For Seeding/Fallback) ---
 const defaultOnedayEvents = [
   {
     date: '2026.08.XX',
@@ -110,6 +110,7 @@ const defaultOnedaySamples = [
   { image: 'images/food.webp', order: 5 },
   { image: 'images/event.webp', order: 6 }
 ];
+
 
 // --- Components ---
 
@@ -265,7 +266,6 @@ const ServicesAccordion = ({ onNavigate }) => {
               className="group relative overflow-hidden rounded-sm transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer flex flex-col justify-end border border-white/5 hover:border-white/20"
               style={{ flex: isActive ? '3 1 0%' : '1 1 0%' }}
             >
-              {/* 背景画像 */}
               <div 
                 className="absolute inset-0 w-full h-full transition-opacity duration-1000 flex items-center justify-center"
                 style={{ opacity: isActive ? 0.4 : 0.05 }}
@@ -277,12 +277,9 @@ const ServicesAccordion = ({ onNavigate }) => {
                 />
               </div>
               
-              {/* オーバーレイ */}
               <div className={`absolute inset-0 transition-colors duration-700 ${isActive ? 'bg-gradient-to-t from-[#02040a]/80 via-[#02040a]/10 to-transparent' : 'bg-[#02040a]/20'}`}></div>
               
-              {/* コンテンツ */}
               <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end h-full">
-                {/* カテゴリバッジ */}
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`text-xs tracking-[0.2em] font-bold transition-colors duration-500 ${isActive ? 'text-gold' : 'text-gray-400'}`}>
                     {item.category}
@@ -292,7 +289,6 @@ const ServicesAccordion = ({ onNavigate }) => {
                   </span>
                 </div>
                 
-                {/* タイトル */}
                 <h2 className={`font-normal tracking-wider transition-all duration-500 whitespace-pre-line drop-shadow-lg ${isActive ? 'text-3xl md:text-4xl mb-4 text-white' : 'text-xl md:text-2xl mb-0 text-gray-300 group-hover:text-white'}`}>
                   {item.title}
                   {item.subtitle && (
@@ -300,7 +296,6 @@ const ServicesAccordion = ({ onNavigate }) => {
                   )}
                 </h2>
 
-                {/* 詳細説明 & リンク */}
                 <div 
                   className={`overflow-hidden transition-all duration-700 ease-in-out flex flex-col justify-end ${isActive ? 'max-h-64 opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'}`}
                 >
@@ -367,7 +362,6 @@ const ShootingPage = ({ onNavigate, onOpenContact }) => {
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
-      {/* 戻るボタン */}
       <button 
         onClick={() => onNavigate('home')} 
         className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
@@ -418,7 +412,6 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
-      {/* 戻るボタン */}
       <button 
         onClick={() => onNavigate('home')} 
         className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
@@ -472,7 +465,6 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
-      {/* 戻るボタン */}
       <button 
         onClick={() => onNavigate('home')} 
         className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
@@ -590,7 +582,6 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
             >
               <div className="w-full h-48 overflow-hidden relative">
                 <img 
-                  // 互換性のため image または images[0] を表示
                   src={loc.images ? loc.images[0] : loc.image} 
                   alt={loc.name} 
                   className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
@@ -599,7 +590,6 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
                   <MapPin size={12} className="text-gold" />
                   <span className="text-xs tracking-widest text-white">{loc.area}</span>
                 </div>
-                {/* 複数画像がある場合のバッジ */}
                 {loc.images && loc.images.length > 1 && (
                   <div className="absolute bottom-3 right-4 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center">
                     <span className="text-[10px] tracking-widest text-white/80">+{loc.images.length - 1} PHOTOS</span>
@@ -789,17 +779,12 @@ export default function App() {
     console.log("現在参照しているイベントのパス:", `artifacts/${appId}/public/data/onedayEvents`);
     
     const unsubscribeEvents = onSnapshot(eventsRef, (snapshot) => {
-      // Data seeding if collection is empty
       if (snapshot.empty && !window.__seededEvents) {
         window.__seededEvents = true;
-        defaultOnedayEvents.forEach(ev => addDoc(eventsRef, ev));
+        console.warn("イベントデータが空です。Firebase管理画面からデータを追加してください。");
       }
-
       const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
-      // Client-side sorting by 'order'
       eventsData.sort((a, b) => (a.order || 99) - (b.order || 99));
-      
       setOnedayEvents(eventsData);
     }, (error) => {
       console.error("Error fetching oneday events:", error);
@@ -810,12 +795,10 @@ export default function App() {
     
     const unsubscribeLocations = onSnapshot(locationsRef, (snapshot) => {
       console.log("Firestoreから取得したロケーションの件数:", snapshot.docs.length);
-      
       if (snapshot.empty && !window.__seededLocations) {
         window.__seededLocations = true;
-        defaultOnedayLocations.forEach(loc => addDoc(locationsRef, loc));
+        console.warn("ロケーションデータが空です。Firebase管理画面からデータを追加してください。");
       }
-
       const locationsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       locationsData.sort((a, b) => (a.order || 99) - (b.order || 99));
       setOnedayLocations(locationsData);
@@ -827,11 +810,11 @@ export default function App() {
     console.log("現在参照しているサンプルのパス:", `artifacts/${appId}/public/data/onedaySamples`);
     
     const unsubscribeSamples = onSnapshot(samplesRef, (snapshot) => {
+      console.log("Firestoreから取得したサンプルの件数:", snapshot.docs.length);
       if (snapshot.empty && !window.__seededSamples) {
         window.__seededSamples = true;
-        defaultOnedaySamples.forEach(sample => addDoc(samplesRef, sample));
+        console.warn("サンプルデータが空です。Firebase管理画面からデータを追加してください。");
       }
-
       const samplesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       samplesData.sort((a, b) => (a.order || 99) - (b.order || 99));
       setOnedaySamples(samplesData);
@@ -984,12 +967,10 @@ export default function App() {
         const cx = width * 0.8;
         const cy = height * 0.4;
         
-        // --- 画面内の指定されたすべての画像に光の計算を適用 ---
         const targets = document.querySelectorAll('.illuminated-target');
         
         targets.forEach(el => {
           const rect = el.getBoundingClientRect();
-          // 要素が画面内に存在する場合のみ計算
           if (rect.top < height && rect.bottom > 0) {
             const elX = rect.left + rect.width / 2;
             const elY = rect.top + rect.height / 2;
@@ -1005,10 +986,8 @@ export default function App() {
             const hitThreshold = 0.4; 
             if (diff < hitThreshold) {
               const intensity = 1 - (diff / hitThreshold);
-              // 光が直撃している時の輝度と影
               el.style.filter = `drop-shadow(0 0 ${20 + intensity * 60}px rgba(255, 255, 255, ${0.5 + intensity * 0.5})) brightness(${1 + intensity * 0.5})`;
             } else {
-              // デフォルト状態
               el.style.filter = 'drop-shadow(0 0 15px rgba(255,255,255,0.3)) brightness(1)';
             }
           }
