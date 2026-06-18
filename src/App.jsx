@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, X, Quote, ChevronLeft } from 'lucide-react';
+import { ChevronDown, X, Quote, ChevronLeft, MapPin } from 'lucide-react';
 
 // --- Firebase Imports ---
 import { initializeApp } from 'firebase/app';
@@ -345,6 +345,33 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
     ? sampleImages 
     : ['images/spp.webp', 'images/sports.webp', 'images/request.webp', 'images/pet.webp', 'images/food.webp', 'images/event.webp'];
 
+  const locations = [
+    {
+      name: 'Antique Cafe "Rêve"',
+      area: 'Sapporo',
+      description: 'アンティーク家具と温かみのある間接照明が特徴のクラシカルなカフェ。貸切でのプライベートな撮影が可能です。',
+      image: 'images/event.webp'
+    },
+    {
+      name: 'Otaru Brick Warehouse',
+      area: 'Otaru',
+      description: '歴史を感じさせる赤レンガと高い天井。退廃的でクールなライティングを活かしたアーティスティックな撮影に最適です。',
+      image: 'images/spp.webp'
+    },
+    {
+      name: 'Seaside Space "Nagi"',
+      area: 'Ishikari',
+      description: '日本海を一望できる白を基調とした自然光豊かなギャラリースペース。時間帯によって移り変わる光の表情を楽しめます。',
+      image: 'images/powertide.webp'
+    },
+    {
+      name: 'Industrial Ruins',
+      area: 'Secret',
+      description: 'インダストリアルな質感と剥き出しの鉄骨が残る廃工場跡地。エッジの効いたアバンギャルドな作品撮りに。',
+      image: 'images/request.webp'
+    }
+  ];
+
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
       {/* 戻るボタン */}
@@ -365,6 +392,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
             src="images/onedaybanner.webp" 
             className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 illuminated-target" 
             alt="ONEDAY CONCEPT" 
+            onError={(e) => { e.target.src = 'images/event.webp'; }} // fallback
           />
         </div>
         <div className="max-w-3xl mx-auto text-center md:text-left space-y-6">
@@ -398,11 +426,11 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
         )}
       </section>
 
-      {/* Past Events & Location */}
-      <section className="mb-32 flex flex-col md:flex-row gap-16">
-        <div className="w-full md:w-1/2">
-          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8">PAST EVENTS</h2>
-          <ul className="space-y-6">
+      {/* Past Events */}
+      <section className="mb-32">
+        <div className="w-full">
+          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8 text-center md:text-left">PAST EVENTS</h2>
+          <ul className="space-y-6 max-w-3xl mx-auto md:mx-0">
             {pastEvents.map((ev, i) => (
               <li key={ev.id || i} className="border-b border-white/5 pb-4">
                 <p className="text-sm text-gold/80 font-sans tracking-wider">{ev.date}</p>
@@ -410,21 +438,45 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
               </li>
             ))}
             {pastEvents.length === 0 && (
-              <p className="text-gray-500 text-sm tracking-widest">過去のイベント情報はありません。</p>
+              <p className="text-gray-500 text-sm tracking-widest text-center md:text-left">過去のイベント情報はありません。</p>
             )}
           </ul>
         </div>
-        <div className="w-full md:w-1/2">
-          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8">LOCATIONS</h2>
-          <p className="text-gray-300 leading-relaxed text-sm font-sans whitespace-pre-line mb-6">
+      </section>
+
+      {/* Locations */}
+      <section className="mb-32">
+        <div className="text-center md:text-left mb-12">
+          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-6 inline-block">LOCATIONS</h2>
+          <p className="text-gray-300 leading-relaxed text-sm font-sans whitespace-pre-line">
             カフェ、バー、ギャラリー、廃工場、自然の中など。<br/>
-            ONEDAYは決まった場所を持ちません。<br/>
-            ロケーションの持つ力を最大限に引き出し、被写体と空間がセッションするような撮影体験を提供します。
+            ONEDAYは決まった場所を持ちません。ロケーションの持つ力を最大限に引き出し、<br className="hidden md:block" />
+            被写体と空間がセッションするような撮影体験を提供します。
           </p>
-          <div className="grid grid-cols-2 gap-4">
-            <img src="images/event.webp" alt="Location 1" className="w-full h-32 object-cover opacity-70 hover:opacity-100 transition-opacity illuminated-target rounded-sm" />
-            <img src="images/powertide.webp" alt="Location 2" className="w-full h-32 object-cover opacity-70 hover:opacity-100 transition-opacity illuminated-target rounded-sm" />
-          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {locations.map((loc, index) => (
+            <div key={index} className="flex flex-col border border-white/10 glass-panel group overflow-hidden h-full">
+              <div className="w-full h-48 overflow-hidden relative">
+                <img 
+                  src={loc.image} 
+                  alt={loc.name} 
+                  className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
+                />
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-sm border border-white/10 flex items-center gap-1.5">
+                  <MapPin size={12} className="text-gold" />
+                  <span className="text-xs tracking-widest text-white">{loc.area}</span>
+                </div>
+              </div>
+              <div className="p-6 flex flex-col flex-grow bg-black/20">
+                <h3 className="text-lg font-light text-white tracking-wide mb-3">{loc.name}</h3>
+                <p className="text-sm text-gray-400 font-sans leading-relaxed">
+                  {loc.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
