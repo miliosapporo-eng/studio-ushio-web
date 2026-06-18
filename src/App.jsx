@@ -42,7 +42,7 @@ const ServicesAccordion = ({ onNavigate }) => {
       desc: '1日だけのイベント型撮影スタジオ。出張型のスペースを間借りしたスタジオをパーティイベントのように各所で開催していきます。',
       imgSrc: 'images/oneday.webp',
       href: '#',
-      onClick: (e) => { e.preventDefault(); },
+      onClick: (e) => { e.preventDefault(); onNavigate('oneday'); },
       activeScale: 'scale-105',
       inactiveScale: 'scale-110'
     },
@@ -259,6 +259,130 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 
       <div className="mt-32 text-center border-t border-white/10 pt-16">
         <p className="text-gray-400 text-sm mb-8 tracking-widest">プランの詳細やご依頼はお気軽にご連絡ください。</p>
+        <button 
+          onClick={onOpenContact} 
+          className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
+        >
+          CONTACT US
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Oneday Page Component
+const OnedayPage = ({ onNavigate, onOpenContact }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
+      {/* 戻るボタン */}
+      <button 
+        onClick={() => onNavigate('home')} 
+        className="flex items-center text-gray-400 hover:text-white mb-16 transition-colors tracking-widest text-sm"
+      >
+        <ChevronLeft className="mr-2" size={20} /> HOME
+      </button>
+
+      <h1 className="text-4xl md:text-5xl font-light tracking-[0.2em] mb-4 text-center uppercase">ONEDAY</h1>
+      <p className="text-center text-gold tracking-widest mb-20 text-sm md:text-base">1日限定・イベント型撮影スタジオ</p>
+
+      {/* Concept */}
+      <section className="mb-32">
+        <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden border border-white/10 glass-panel group mb-10">
+          <img 
+            src="images/oneday.webp" 
+            className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 illuminated-target" 
+            alt="ONEDAY CONCEPT" 
+          />
+        </div>
+        <div className="max-w-3xl mx-auto text-center md:text-left space-y-6">
+          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 inline-block mb-4">CONCEPT</h2>
+          <p className="text-gray-300 leading-relaxed text-sm md:text-base font-sans whitespace-pre-line">
+            空間を活かしたポートレート撮影スタジオ。<br/><br/>
+            「ONEDAY」は、出張型のスペースを間借りし、1日限りのパーティイベントのように各所で開催する特別な撮影プロジェクトです。<br/>
+            いつものスタジオとは違う、その日、その場所でしか生み出せない空気感と光。<br/>
+            非日常のロケーションで、あなたの新しい魅力を引き出します。
+          </p>
+        </div>
+      </section>
+
+      {/* Upcoming Events */}
+      <section className="mb-32">
+        <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center md:text-left">UPCOMING EVENTS</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
+            <p className="text-gold tracking-widest text-sm mb-2">2026.08.XX</p>
+            <h3 className="text-xl font-light mb-4 text-white">Antique Cafe Session</h3>
+            <p className="text-gray-400 text-sm font-sans mb-4">札幌市内のアンティーク家具が並ぶカフェを貸し切り、クラシカルな雰囲気での撮影を行います。</p>
+            <p className="text-xs text-gray-500 tracking-wider">予約受付：Coming Soon</p>
+          </div>
+          <div className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
+            <p className="text-gold tracking-widest text-sm mb-2">2026.10.XX</p>
+            <h3 className="text-xl font-light mb-4 text-white">Warehouse Portraits</h3>
+            <p className="text-gray-400 text-sm font-sans mb-4">小樽運河沿いのレンガ倉庫を利用し、退廃的でクールなライティングを活かした撮影会。</p>
+            <p className="text-xs text-gray-500 tracking-wider">予約受付：Coming Soon</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Past Events & Location */}
+      <section className="mb-32 flex flex-col md:flex-row gap-16">
+        <div className="w-full md:w-1/2">
+          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8">PAST EVENTS</h2>
+          <ul className="space-y-6">
+            <li className="border-b border-white/5 pb-4">
+              <p className="text-sm text-gold/80 font-sans tracking-wider">2026.05</p>
+              <p className="text-base text-gray-200 mt-1">廃工場跡地 クリエイティブシュート</p>
+            </li>
+            <li className="border-b border-white/5 pb-4">
+              <p className="text-sm text-gold/80 font-sans tracking-wider">2025.12</p>
+              <p className="text-base text-gray-200 mt-1">雪原とキャンドルナイト</p>
+            </li>
+          </ul>
+        </div>
+        <div className="w-full md:w-1/2">
+          <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8">LOCATIONS</h2>
+          <p className="text-gray-300 leading-relaxed text-sm font-sans whitespace-pre-line mb-6">
+            カフェ、バー、ギャラリー、廃工場、自然の中など。<br/>
+            ONEDAYは決まった場所を持ちません。<br/>
+            ロケーションの持つ力を最大限に引き出し、被写体と空間がセッションするような撮影体験を提供します。
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <img src="images/event.webp" alt="Location 1" className="w-full h-32 object-cover opacity-70 hover:opacity-100 transition-opacity illuminated-target rounded-sm" />
+            <img src="images/powertide.webp" alt="Location 2" className="w-full h-32 object-cover opacity-70 hover:opacity-100 transition-opacity illuminated-target rounded-sm" />
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery / Samples */}
+      <section className="mb-32">
+        <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center">SAMPLES</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {[
+            'images/spp.webp', 
+            'images/sports.webp', 
+            'images/request.webp', 
+            'images/pet.webp', 
+            'images/food.webp', 
+            'images/event.webp'
+          ].map((src, i) => (
+            <div key={i} className="aspect-square overflow-hidden group border border-white/10 glass-panel">
+              <img 
+                src={src} 
+                alt={`Sample ${i}`} 
+                className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 illuminated-target"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Contact */}
+      <div className="mt-32 text-center border-t border-white/10 pt-16">
+        <p className="text-gray-400 text-sm mb-8 tracking-widest">次回の開催情報や、ロケーションの提供についてのお問い合わせはこちら</p>
         <button 
           onClick={onOpenContact} 
           className="px-10 py-3 border border-white/30 text-sm tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
@@ -857,6 +981,8 @@ export default function App() {
         <ShootingPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : currentPage === 'sns' ? (
         <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
+      ) : currentPage === 'oneday' ? (
+        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : null}
 
       {/* Footer */}
