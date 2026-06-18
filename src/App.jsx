@@ -1,6 +1,66 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, X, Quote, ChevronLeft } from 'lucide-react';
 
+// --- Firebase Imports ---
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, onSnapshot, addDoc } from 'firebase/firestore';
+
+// --- Firebase Initialization ---
+let app, auth, db, appId;
+try {
+  const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+  const firebaseConfig = JSON.parse(firebaseConfigStr);
+  if (Object.keys(firebaseConfig).length > 0) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+  }
+} catch (e) {
+  console.error("Firebase initialization error", e);
+}
+
+// --- Default Data (For Seeding Firestore) ---
+const defaultOnedayEvents = [
+  {
+    date: '2026.08.XX',
+    title: 'Antique Cafe Session',
+    description: '札幌市内のアンティーク家具が並ぶカフェを貸し切り、クラシカルな雰囲気での撮影を行います。',
+    status: 'upcoming',
+    statusText: '予約受付：Coming Soon',
+    images: ['images/event.webp', 'images/powertide.webp'],
+    order: 1
+  },
+  {
+    date: '2026.10.XX',
+    title: 'Warehouse Portraits',
+    description: '小樽運河沿いのレンガ倉庫を利用し、退廃的でクールなライティングを活かした撮影会。',
+    status: 'upcoming',
+    statusText: '予約受付：Coming Soon',
+    images: ['images/spp.webp'],
+    order: 2
+  },
+  {
+    date: '2026.05',
+    title: '廃工場跡地 クリエイティブシュート',
+    description: '',
+    status: 'past',
+    statusText: '',
+    images: ['images/request.webp', 'images/sports.webp'],
+    order: 3
+  },
+  {
+    date: '2025.12',
+    title: '雪原とキャンドルナイト',
+    description: '',
+    status: 'past',
+    statusText: '',
+    images: ['images/pet.webp', 'images/food.webp'],
+    order: 4
+  }
+];
+
 // --- Components ---
 
 // Services Accordion Component
@@ -271,10 +331,19 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 };
 
 // Oneday Page Component
-const OnedayPage = ({ onNavigate, onOpenContact }) => {
+const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const upcomingEvents = events.filter(e => e.status === 'upcoming');
+  const pastEvents = events.filter(e => e.status === 'past');
+  
+  // イベントに紐づく画像をすべて抽出
+  const sampleImages = events.flatMap(e => e.images || []).filter(Boolean);
+  const displaySamples = sampleImages.length > 0 
+    ? sampleImages 
+    : ['images/spp.webp', 'images/sports.webp', 'images/request.webp', 'images/pet.webp', 'images/food.webp', 'images/event.webp'];
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
@@ -312,20 +381,20 @@ const OnedayPage = ({ onNavigate, onOpenContact }) => {
       {/* Upcoming Events */}
       <section className="mb-32">
         <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center md:text-left">UPCOMING EVENTS</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
-            <p className="text-gold tracking-widest text-sm mb-2">2026.08.XX</p>
-            <h3 className="text-xl font-light mb-4 text-white">Antique Cafe Session</h3>
-            <p className="text-gray-400 text-sm font-sans mb-4">札幌市内のアンティーク家具が並ぶカフェを貸し切り、クラシカルな雰囲気での撮影を行います。</p>
-            <p className="text-xs text-gray-500 tracking-wider">予約受付：Coming Soon</p>
+        {upcomingEvents.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {upcomingEvents.map((ev, i) => (
+              <div key={ev.id || i} className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
+                <p className="text-gold tracking-widest text-sm mb-2">{ev.date}</p>
+                <h3 className="text-xl font-light mb-4 text-white">{ev.title}</h3>
+                <p className="text-gray-400 text-sm font-sans mb-4 whitespace-pre-line">{ev.description}</p>
+                {ev.statusText && <p className="text-xs text-gray-500 tracking-wider">{ev.statusText}</p>}
+              </div>
+            ))}
           </div>
-          <div className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
-            <p className="text-gold tracking-widest text-sm mb-2">2026.10.XX</p>
-            <h3 className="text-xl font-light mb-4 text-white">Warehouse Portraits</h3>
-            <p className="text-gray-400 text-sm font-sans mb-4">小樽運河沿いのレンガ倉庫を利用し、退廃的でクールなライティングを活かした撮影会。</p>
-            <p className="text-xs text-gray-500 tracking-wider">予約受付：Coming Soon</p>
-          </div>
-        </div>
+        ) : (
+          <p className="text-gray-500 text-sm tracking-widest text-center">現在予定されているイベントはありません。</p>
+        )}
       </section>
 
       {/* Past Events & Location */}
@@ -333,14 +402,15 @@ const OnedayPage = ({ onNavigate, onOpenContact }) => {
         <div className="w-full md:w-1/2">
           <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-8">PAST EVENTS</h2>
           <ul className="space-y-6">
-            <li className="border-b border-white/5 pb-4">
-              <p className="text-sm text-gold/80 font-sans tracking-wider">2026.05</p>
-              <p className="text-base text-gray-200 mt-1">廃工場跡地 クリエイティブシュート</p>
-            </li>
-            <li className="border-b border-white/5 pb-4">
-              <p className="text-sm text-gold/80 font-sans tracking-wider">2025.12</p>
-              <p className="text-base text-gray-200 mt-1">雪原とキャンドルナイト</p>
-            </li>
+            {pastEvents.map((ev, i) => (
+              <li key={ev.id || i} className="border-b border-white/5 pb-4">
+                <p className="text-sm text-gold/80 font-sans tracking-wider">{ev.date}</p>
+                <p className="text-base text-gray-200 mt-1">{ev.title}</p>
+              </li>
+            ))}
+            {pastEvents.length === 0 && (
+              <p className="text-gray-500 text-sm tracking-widest">過去のイベント情報はありません。</p>
+            )}
           </ul>
         </div>
         <div className="w-full md:w-1/2">
@@ -361,14 +431,7 @@ const OnedayPage = ({ onNavigate, onOpenContact }) => {
       <section className="mb-32">
         <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center">SAMPLES</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[
-            'images/spp.webp', 
-            'images/sports.webp', 
-            'images/request.webp', 
-            'images/pet.webp', 
-            'images/food.webp', 
-            'images/event.webp'
-          ].map((src, i) => (
+          {displaySamples.map((src, i) => (
             <div key={i} className="aspect-square overflow-hidden group border border-white/10 glass-panel">
               <img 
                 src={src} 
@@ -489,6 +552,57 @@ export default function App() {
   const logoRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
+
+  // Firebase state
+  const [user, setUser] = useState(null);
+  const [onedayEvents, setOnedayEvents] = useState([]);
+
+  // Auth Initialization
+  useEffect(() => {
+    if (!auth) return;
+    const initAuth = async () => {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (err) {
+        console.error("Auth init error:", err);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch Events from Firestore
+  useEffect(() => {
+    if (!user || !db) return;
+
+    const eventsRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedayEvents');
+    const unsubscribe = onSnapshot(eventsRef, (snapshot) => {
+      // Data seeding if collection is empty
+      if (snapshot.empty && !window.__seededEvents) {
+        window.__seededEvents = true;
+        defaultOnedayEvents.forEach(ev => addDoc(eventsRef, ev));
+      }
+
+      const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Client-side sorting by 'order'
+      eventsData.sort((a, b) => (a.order || 99) - (b.order || 99));
+      
+      setOnedayEvents(eventsData);
+    }, (error) => {
+      console.error("Error fetching oneday events:", error);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // Use default data if firestore hasn't synced yet or is empty
+  const displayEvents = onedayEvents.length > 0 ? onedayEvents : defaultOnedayEvents;
 
   // Canvas Animation Logic
   useEffect(() => {
@@ -982,7 +1096,7 @@ export default function App() {
       ) : currentPage === 'sns' ? (
         <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : currentPage === 'oneday' ? (
-        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
+        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} />
       ) : null}
 
       {/* Footer */}
