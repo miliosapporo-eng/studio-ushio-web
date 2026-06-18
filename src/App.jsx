@@ -61,6 +61,37 @@ const defaultOnedayEvents = [
   }
 ];
 
+const defaultOnedayLocations = [
+  {
+    name: 'Antique Cafe "Rêve"',
+    area: 'Sapporo',
+    description: 'アンティーク家具と温かみのある間接照明が特徴のクラシカルなカフェ。貸切でのプライベートな撮影が可能です。',
+    image: 'images/event.webp',
+    order: 1
+  },
+  {
+    name: 'Otaru Brick Warehouse',
+    area: 'Otaru',
+    description: '歴史を感じさせる赤レンガと高い天井。退廃的でクールなライティングを活かしたアーティスティックな撮影に最適です。',
+    image: 'images/spp.webp',
+    order: 2
+  },
+  {
+    name: 'Seaside Space "Nagi"',
+    area: 'Ishikari',
+    description: '日本海を一望できる白を基調とした自然光豊かなギャラリースペース。時間帯によって移り変わる光の表情を楽しめます。',
+    image: 'images/powertide.webp',
+    order: 3
+  },
+  {
+    name: 'Industrial Ruins',
+    area: 'Secret',
+    description: 'インダストリアルな質感と剥き出しの鉄骨が残る廃工場跡地。エッジの効いたアバンギャルドな作品撮りに。',
+    image: 'images/request.webp',
+    order: 4
+  }
+];
+
 // --- Components ---
 
 // Services Accordion Component
@@ -331,7 +362,7 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 };
 
 // Oneday Page Component
-const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
+const OnedayPage = ({ onNavigate, onOpenContact, events, locations }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -344,33 +375,6 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
   const displaySamples = sampleImages.length > 0 
     ? sampleImages 
     : ['images/spp.webp', 'images/sports.webp', 'images/request.webp', 'images/pet.webp', 'images/food.webp', 'images/event.webp'];
-
-  const locations = [
-    {
-      name: 'Antique Cafe "Rêve"',
-      area: 'Sapporo',
-      description: 'アンティーク家具と温かみのある間接照明が特徴のクラシカルなカフェ。貸切でのプライベートな撮影が可能です。',
-      image: 'images/event.webp'
-    },
-    {
-      name: 'Otaru Brick Warehouse',
-      area: 'Otaru',
-      description: '歴史を感じさせる赤レンガと高い天井。退廃的でクールなライティングを活かしたアーティスティックな撮影に最適です。',
-      image: 'images/spp.webp'
-    },
-    {
-      name: 'Seaside Space "Nagi"',
-      area: 'Ishikari',
-      description: '日本海を一望できる白を基調とした自然光豊かなギャラリースペース。時間帯によって移り変わる光の表情を楽しめます。',
-      image: 'images/powertide.webp'
-    },
-    {
-      name: 'Industrial Ruins',
-      area: 'Secret',
-      description: 'インダストリアルな質感と剥き出しの鉄骨が残る廃工場跡地。エッジの効いたアバンギャルドな作品撮りに。',
-      image: 'images/request.webp'
-    }
-  ];
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
@@ -609,6 +613,7 @@ export default function App() {
   // Firebase state
   const [user, setUser] = useState(null);
   const [onedayEvents, setOnedayEvents] = useState([]);
+  const [onedayLocations, setOnedayLocations] = useState([]);
 
   // Auth Initialization
   useEffect(() => {
@@ -634,7 +639,7 @@ export default function App() {
     if (!user || !db) return;
 
     const eventsRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedayEvents');
-    const unsubscribe = onSnapshot(eventsRef, (snapshot) => {
+    const unsubscribeEvents = onSnapshot(eventsRef, (snapshot) => {
       // Data seeding if collection is empty
       if (snapshot.empty && !window.__seededEvents) {
         window.__seededEvents = true;
@@ -651,11 +656,29 @@ export default function App() {
       console.error("Error fetching oneday events:", error);
     });
 
-    return () => unsubscribe();
+    const locationsRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedayLocations');
+    const unsubscribeLocations = onSnapshot(locationsRef, (snapshot) => {
+      if (snapshot.empty && !window.__seededLocations) {
+        window.__seededLocations = true;
+        defaultOnedayLocations.forEach(loc => addDoc(locationsRef, loc));
+      }
+
+      const locationsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      locationsData.sort((a, b) => (a.order || 99) - (b.order || 99));
+      setOnedayLocations(locationsData);
+    }, (error) => {
+      console.error("Error fetching oneday locations:", error);
+    });
+
+    return () => {
+      unsubscribeEvents();
+      unsubscribeLocations();
+    };
   }, [user]);
 
   // Use default data if firestore hasn't synced yet or is empty
   const displayEvents = onedayEvents.length > 0 ? onedayEvents : defaultOnedayEvents;
+  const displayLocations = onedayLocations.length > 0 ? onedayLocations : defaultOnedayLocations;
 
   // Canvas Animation Logic
   useEffect(() => {
@@ -1149,7 +1172,7 @@ export default function App() {
       ) : currentPage === 'sns' ? (
         <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : currentPage === 'oneday' ? (
-        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} />
+        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} locations={displayLocations} />
       ) : null}
 
       {/* Footer */}
