@@ -102,6 +102,15 @@ const defaultOnedayLocations = [
   }
 ];
 
+const defaultOnedaySamples = [
+  { image: 'images/spp.webp', order: 1 },
+  { image: 'images/sports.webp', order: 2 },
+  { image: 'images/request.webp', order: 3 },
+  { image: 'images/pet.webp', order: 4 },
+  { image: 'images/food.webp', order: 5 },
+  { image: 'images/event.webp', order: 6 }
+];
+
 // --- Components ---
 
 // Services Accordion Component
@@ -372,19 +381,13 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 };
 
 // Oneday Page Component
-const OnedayPage = ({ onNavigate, onOpenContact, events, locations }) => {
+const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const upcomingEvents = events.filter(e => e.status === 'upcoming');
   const pastEvents = events.filter(e => e.status === 'past');
-  
-  // イベントに紐づく画像をすべて抽出
-  const sampleImages = events.flatMap(e => e.images || []).filter(Boolean);
-  const displaySamples = sampleImages.length > 0 
-    ? sampleImages 
-    : ['images/spp.webp', 'images/sports.webp', 'images/request.webp', 'images/pet.webp', 'images/food.webp', 'images/event.webp'];
 
   return (
     <div className="flex-grow w-full max-w-5xl mx-auto py-20 px-6 z-10 animate-fade-in mt-10 md:mt-20">
@@ -427,11 +430,29 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations }) => {
         {upcomingEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {upcomingEvents.map((ev, i) => (
-              <div key={ev.id || i} className="glass-panel p-8 border border-white/10 hover:border-gold/50 transition-colors">
-                <p className="text-gold tracking-widest text-sm mb-2">{ev.date}</p>
-                <h3 className="text-xl font-light mb-4 text-white">{ev.title}</h3>
-                <p className="text-gray-400 text-sm font-sans mb-4 whitespace-pre-line">{ev.description}</p>
-                {ev.statusText && <p className="text-xs text-gray-500 tracking-wider">{ev.statusText}</p>}
+              <div key={ev.id || i} className="glass-panel border border-white/10 hover:border-gold/50 transition-colors flex flex-col overflow-hidden">
+                {ev.images && ev.images.length > 0 && (
+                  <div className="w-full h-56 relative overflow-hidden border-b border-white/10">
+                    <img 
+                      src={ev.images[0]} 
+                      alt={ev.title} 
+                      className="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-700 illuminated-target"
+                    />
+                    {ev.statusText && (
+                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-sm border border-gold/30">
+                        <span className="text-xs tracking-widest text-gold font-bold">{ev.statusText}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="p-8 flex flex-col flex-grow">
+                  <p className="text-gold tracking-widest text-sm mb-2">{ev.date}</p>
+                  <h3 className="text-xl font-light mb-4 text-white">{ev.title}</h3>
+                  <p className="text-gray-400 text-sm font-sans mb-4 whitespace-pre-line flex-grow">{ev.description}</p>
+                  {(!ev.images || ev.images.length === 0) && ev.statusText && (
+                    <p className="text-xs text-gray-500 tracking-wider mt-auto">{ev.statusText}</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -498,10 +519,10 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations }) => {
       <section className="mb-32">
         <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center">SAMPLES</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {displaySamples.map((src, i) => (
-            <div key={i} className="aspect-square overflow-hidden group border border-white/10 glass-panel">
+          {samples.map((sample, i) => (
+            <div key={sample.id || i} className="aspect-square overflow-hidden group border border-white/10 glass-panel">
               <img 
-                src={src} 
+                src={sample.image} 
                 alt={`Sample ${i}`} 
                 className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 illuminated-target"
               />
@@ -624,6 +645,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [onedayEvents, setOnedayEvents] = useState([]);
   const [onedayLocations, setOnedayLocations] = useState([]);
+  const [onedaySamples, setOnedaySamples] = useState([]);
 
   // Auth Initialization
   useEffect(() => {
@@ -686,15 +708,33 @@ export default function App() {
       console.error("Error fetching oneday locations:", error);
     });
 
+    const samplesRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedaySamples');
+    console.log("現在参照しているサンプルのパス:", `artifacts/${appId}/public/data/onedaySamples`);
+    
+    const unsubscribeSamples = onSnapshot(samplesRef, (snapshot) => {
+      if (snapshot.empty && !window.__seededSamples) {
+        window.__seededSamples = true;
+        defaultOnedaySamples.forEach(sample => addDoc(samplesRef, sample));
+      }
+
+      const samplesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      samplesData.sort((a, b) => (a.order || 99) - (b.order || 99));
+      setOnedaySamples(samplesData);
+    }, (error) => {
+      console.error("Error fetching oneday samples:", error);
+    });
+
     return () => {
       unsubscribeEvents();
       unsubscribeLocations();
+      unsubscribeSamples();
     };
   }, [user]);
 
   // Use default data if firestore hasn't synced yet or is empty
   const displayEvents = onedayEvents.length > 0 ? onedayEvents : defaultOnedayEvents;
   const displayLocations = onedayLocations.length > 0 ? onedayLocations : defaultOnedayLocations;
+  const displaySamples = onedaySamples.length > 0 ? onedaySamples : defaultOnedaySamples;
 
   // Canvas Animation Logic
   useEffect(() => {
@@ -1188,7 +1228,7 @@ export default function App() {
       ) : currentPage === 'sns' ? (
         <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : currentPage === 'oneday' ? (
-        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} locations={displayLocations} />
+        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} locations={displayLocations} samples={displaySamples} />
       ) : null}
 
       {/* Footer */}
