@@ -511,7 +511,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
                 {ev.images && ev.images.length > 0 && (
                   <div className="w-full h-56 relative overflow-hidden border-b border-white/10">
                     <img 
-                      src={ev.images[0]} 
+                      src={Array.isArray(ev.images) ? ev.images[0] : ev.images} 
                       alt={ev.title} 
                       className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
                     />
@@ -521,7 +521,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
                       </div>
                     )}
                     {/* 複数画像がある場合のバッジ */}
-                    {ev.images.length > 1 && (
+                    {Array.isArray(ev.images) && ev.images.length > 1 && (
                       <div className="absolute bottom-3 right-4 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center">
                         <span className="text-[10px] tracking-widest text-white/80">+{ev.images.length - 1} PHOTOS</span>
                       </div>
@@ -582,7 +582,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
             >
               <div className="w-full h-48 overflow-hidden relative">
                 <img 
-                  src={loc.images ? loc.images[0] : loc.image} 
+                  src={Array.isArray(loc.images) ? loc.images[0] : (loc.image || loc.images)} 
                   alt={loc.name} 
                   className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
                 />
@@ -590,7 +590,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
                   <MapPin size={12} className="text-gold" />
                   <span className="text-xs tracking-widest text-white">{loc.area}</span>
                 </div>
-                {loc.images && loc.images.length > 1 && (
+                {Array.isArray(loc.images) && loc.images.length > 1 && (
                   <div className="absolute bottom-3 right-4 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center">
                     <span className="text-[10px] tracking-widest text-white/80">+{loc.images.length - 1} PHOTOS</span>
                   </div>
@@ -618,11 +618,11 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onO
               onClick={() => onOpenViewer(sample)}
             >
               <img 
-                src={sample.images ? sample.images[0] : sample.image} 
+                src={Array.isArray(sample.images) ? sample.images[0] : (sample.image || sample.images)} 
                 alt={`Sample ${i}`} 
                 className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 illuminated-target"
               />
-              {sample.images && sample.images.length > 1 && (
+              {Array.isArray(sample.images) && sample.images.length > 1 && (
                 <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-[10px] tracking-widest text-white/80">+{sample.images.length - 1}</span>
                 </div>
