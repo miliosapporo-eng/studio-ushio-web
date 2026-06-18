@@ -15,7 +15,8 @@ try {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
-    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    // 【修正】データベースのパスを 'studioushio' に確実に固定します
+    appId = 'studioushio';
   }
 } catch (e) {
   console.error("Firebase initialization error", e);
@@ -639,6 +640,8 @@ export default function App() {
     if (!user || !db) return;
 
     const eventsRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedayEvents');
+    console.log("現在参照しているイベントのパス:", `artifacts/${appId}/public/data/onedayEvents`);
+    
     const unsubscribeEvents = onSnapshot(eventsRef, (snapshot) => {
       // Data seeding if collection is empty
       if (snapshot.empty && !window.__seededEvents) {
@@ -657,7 +660,11 @@ export default function App() {
     });
 
     const locationsRef = collection(db, 'artifacts', appId, 'public', 'data', 'onedayLocations');
+    console.log("現在参照しているロケーションのパス:", `artifacts/${appId}/public/data/onedayLocations`);
+    
     const unsubscribeLocations = onSnapshot(locationsRef, (snapshot) => {
+      console.log("Firestoreから取得したロケーションの件数:", snapshot.docs.length);
+      
       if (snapshot.empty && !window.__seededLocations) {
         window.__seededLocations = true;
         defaultOnedayLocations.forEach(loc => addDoc(locationsRef, loc));
