@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, X, Quote, ChevronLeft, MapPin } from 'lucide-react';
+import { ChevronDown, X, Quote, ChevronLeft, MapPin, ChevronRight } from 'lucide-react';
 
 // --- Firebase Imports ---
 import { initializeApp } from 'firebase/app';
@@ -112,6 +112,87 @@ const defaultOnedaySamples = [
 ];
 
 // --- Components ---
+
+// ImageViewer Modal Component
+const ImageViewerModal = ({ isOpen, images, onClose }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentIndex(0);
+      document.body.style.overflow = 'hidden'; // 背景のスクロール防止
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  if (!isOpen || !images || images.length === 0) return null;
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md transition-opacity duration-300"
+      onClick={onClose}
+    >
+      <button 
+        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-10" 
+        onClick={onClose}
+      >
+        <X size={32} />
+      </button>
+      
+      <div 
+        className="relative w-full max-w-6xl max-h-screen flex items-center justify-center p-4 md:p-12" 
+        onClick={(e) => e.stopPropagation()}
+      >
+        {images.length > 1 && (
+          <button 
+            className="absolute left-2 md:left-8 text-white/30 hover:text-white p-2 z-10 transition-colors" 
+            onClick={handlePrev}
+          >
+            <ChevronLeft size={48} strokeWidth={1} />
+          </button>
+        )}
+        
+        <img 
+          src={images[currentIndex]} 
+          alt={`View ${currentIndex + 1}`} 
+          className="max-w-full max-h-[85vh] object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
+        />
+        
+        {images.length > 1 && (
+          <button 
+            className="absolute right-2 md:right-8 text-white/30 hover:text-white p-2 z-10 transition-colors" 
+            onClick={handleNext}
+          >
+            <ChevronRight size={48} strokeWidth={1} />
+          </button>
+        )}
+
+        {images.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+            {images.map((_, idx) => (
+              <div 
+                key={idx} 
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-gold scale-125' : 'bg-white/30'}`} 
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 // Services Accordion Component
 const ServicesAccordion = ({ onNavigate }) => {
@@ -381,7 +462,7 @@ const SnsPlanPage = ({ onNavigate, onOpenContact }) => {
 };
 
 // Oneday Page Component
-const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) => {
+const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples, onOpenViewer }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -430,17 +511,27 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) =
         {upcomingEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {upcomingEvents.map((ev, i) => (
-              <div key={ev.id || i} className="glass-panel border border-white/10 hover:border-gold/50 transition-colors flex flex-col overflow-hidden">
+              <div 
+                key={ev.id || i} 
+                className="glass-panel border border-white/10 hover:border-gold/50 transition-colors flex flex-col overflow-hidden cursor-pointer group"
+                onClick={() => onOpenViewer(ev)}
+              >
                 {ev.images && ev.images.length > 0 && (
                   <div className="w-full h-56 relative overflow-hidden border-b border-white/10">
                     <img 
                       src={ev.images[0]} 
                       alt={ev.title} 
-                      className="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-700 illuminated-target"
+                      className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
                     />
                     {ev.statusText && (
                       <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-sm border border-gold/30">
                         <span className="text-xs tracking-widest text-gold font-bold">{ev.statusText}</span>
+                      </div>
+                    )}
+                    {/* 複数画像がある場合のバッジ */}
+                    {ev.images.length > 1 && (
+                      <div className="absolute bottom-3 right-4 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center">
+                        <span className="text-[10px] tracking-widest text-white/80">+{ev.images.length - 1} PHOTOS</span>
                       </div>
                     )}
                   </div>
@@ -492,10 +583,15 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) =
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {locations.map((loc, index) => (
-            <div key={index} className="flex flex-col border border-white/10 glass-panel group overflow-hidden h-full">
+            <div 
+              key={index} 
+              className="flex flex-col border border-white/10 glass-panel group overflow-hidden h-full cursor-pointer"
+              onClick={() => onOpenViewer(loc)}
+            >
               <div className="w-full h-48 overflow-hidden relative">
                 <img 
-                  src={loc.image} 
+                  // 互換性のため image または images[0] を表示
+                  src={loc.images ? loc.images[0] : loc.image} 
                   alt={loc.name} 
                   className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 illuminated-target"
                 />
@@ -503,8 +599,14 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) =
                   <MapPin size={12} className="text-gold" />
                   <span className="text-xs tracking-widest text-white">{loc.area}</span>
                 </div>
+                {/* 複数画像がある場合のバッジ */}
+                {loc.images && loc.images.length > 1 && (
+                  <div className="absolute bottom-3 right-4 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center">
+                    <span className="text-[10px] tracking-widest text-white/80">+{loc.images.length - 1} PHOTOS</span>
+                  </div>
+                )}
               </div>
-              <div className="p-6 flex flex-col flex-grow bg-black/20">
+              <div className="p-6 flex flex-col flex-grow bg-black/20 group-hover:bg-black/40 transition-colors">
                 <h3 className="text-lg font-light text-white tracking-wide mb-3">{loc.name}</h3>
                 <p className="text-sm text-gray-400 font-sans leading-relaxed">
                   {loc.description}
@@ -520,12 +622,21 @@ const OnedayPage = ({ onNavigate, onOpenContact, events, locations, samples }) =
         <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 mb-10 text-center">SAMPLES</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {samples.map((sample, i) => (
-            <div key={sample.id || i} className="aspect-square overflow-hidden group border border-white/10 glass-panel">
+            <div 
+              key={sample.id || i} 
+              className="aspect-square overflow-hidden group border border-white/10 glass-panel cursor-pointer relative"
+              onClick={() => onOpenViewer(sample)}
+            >
               <img 
-                src={sample.image} 
+                src={sample.images ? sample.images[0] : sample.image} 
                 alt={`Sample ${i}`} 
                 className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 illuminated-target"
               />
+              {sample.images && sample.images.length > 1 && (
+                <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] tracking-widest text-white/80">+{sample.images.length - 1}</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -641,6 +752,10 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
 
+  // Image Viewer State
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [viewerImages, setViewerImages] = useState([]);
+
   // Firebase state
   const [user, setUser] = useState(null);
   const [onedayEvents, setOnedayEvents] = useState([]);
@@ -735,6 +850,21 @@ export default function App() {
   const displayEvents = onedayEvents.length > 0 ? onedayEvents : defaultOnedayEvents;
   const displayLocations = onedayLocations.length > 0 ? onedayLocations : defaultOnedayLocations;
   const displaySamples = onedaySamples.length > 0 ? onedaySamples : defaultOnedaySamples;
+
+  // Viewer Handler
+  const handleOpenViewer = (item) => {
+    let imgs = [];
+    if (item.images && Array.isArray(item.images)) {
+      imgs = item.images;
+    } else if (item.image) {
+      imgs = [item.image];
+    }
+    
+    if (imgs.length > 0) {
+      setViewerImages(imgs.filter(Boolean)); // undefined や null を除去
+      setIsViewerOpen(true);
+    }
+  };
 
   // Canvas Animation Logic
   useEffect(() => {
@@ -1228,7 +1358,14 @@ export default function App() {
       ) : currentPage === 'sns' ? (
         <SnsPlanPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} />
       ) : currentPage === 'oneday' ? (
-        <OnedayPage onNavigate={setCurrentPage} onOpenContact={() => setIsModalOpen(true)} events={displayEvents} locations={displayLocations} samples={displaySamples} />
+        <OnedayPage 
+          onNavigate={setCurrentPage} 
+          onOpenContact={() => setIsModalOpen(true)} 
+          events={displayEvents} 
+          locations={displayLocations} 
+          samples={displaySamples}
+          onOpenViewer={handleOpenViewer}
+        />
       ) : null}
 
       {/* Footer */}
@@ -1245,6 +1382,7 @@ export default function App() {
       </footer>
 
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ImageViewerModal isOpen={isViewerOpen} images={viewerImages} onClose={() => setIsViewerOpen(false)} />
       
     </div>
   );
