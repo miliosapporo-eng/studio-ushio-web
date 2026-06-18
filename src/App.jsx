@@ -362,7 +362,7 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
       <section className="mb-32">
         <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden border border-white/10 glass-panel group mb-10">
           <img 
-            src="images/oneday.webp" 
+            src="images/onedaybanner.webp" 
             className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 illuminated-target" 
             alt="ONEDAY CONCEPT" 
           />
@@ -371,9 +371,9 @@ const OnedayPage = ({ onNavigate, onOpenContact, events }) => {
           <h2 className="text-2xl tracking-widest text-gold font-light border-b border-white/20 pb-4 inline-block mb-4">CONCEPT</h2>
           <p className="text-gray-300 leading-relaxed text-sm md:text-base font-sans whitespace-pre-line">
             空間を活かしたポートレート撮影スタジオ。<br/><br/>
-            「ONEDAY」は、出張型のスペースを間借りし、1日限りのパーティイベントのように各所で開催する特別な撮影プロジェクトです。<br/>
+            「ONEDAY」は、レンタルスペースを間借りし、1日限りのパーティイベントのように各所で開催する特別な出張型撮影プロジェクトです。<br/>
             いつものスタジオとは違う、その日、その場所でしか生み出せない空気感と光。<br/>
-            非日常のロケーションで、あなたの新しい魅力を引き出します。
+            お洒落な壁や小道具など非日常のロケーションと掛け合わせて、あなたの魅力ある一面を引き出します。
           </p>
         </div>
       </section>
