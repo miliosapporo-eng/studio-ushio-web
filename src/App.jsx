@@ -9,13 +9,22 @@ import { getFirestore, collection, onSnapshot, addDoc } from 'firebase/firestore
 // --- Firebase Initialization ---
 let app, auth, db, appId;
 try {
-  const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-  const firebaseConfig = JSON.parse(firebaseConfigStr);
+  // 実際の Firebase プロジェクトの設定
+  const firebaseConfig = {
+    apiKey: "AIzaSyDcV_j4_ThwkW_SrUyckCweECcmrdFzvT0",
+    authDomain: "studio-ushio.firebaseapp.com",
+    projectId: "studio-ushio",
+    storageBucket: "studio-ushio.firebasestorage.app",
+    messagingSenderId: "406603778415",
+    appId: "1:406603778415:web:edc3743d86c2d97539809a",
+    measurementId: "G-NPYTFK506Z"
+  };
+
   if (Object.keys(firebaseConfig).length > 0) {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
-    // 【修正】データベースのパスを 'studioushio' に確実に固定します
+    // データベースのパスを 'studioushio' に確実に固定します
     appId = 'studioushio';
   }
 } catch (e) {
